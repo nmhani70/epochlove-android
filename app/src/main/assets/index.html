@@ -1576,5 +1576,27 @@ setTimeout(function() {
     if (mainApp) { mainApp.style.display = 'block'; }
 }, 3000); // بعد از ۳ ثانیه
 </script>
+<!-- کد ضدگلوله برای باز کردن اپ -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            // ۱. مخفی کردن صفحه لودینگ با هر آیدی و کلاسی
+            var splash = document.getElementById('splash');
+            if (splash) splash.style.display = 'none';
+            
+            var loaders = document.querySelectorAll('.loading, .loader, .splash, #loader');
+            loaders.forEach(function(el) { el.style.display = 'none'; });
+
+            // ۲. نمایش اجباری صفحه اصلی
+            var app = document.getElementById('app');
+            if (app) {
+                app.style.display = 'flex'; 
+                app.style.opacity = '1';
+                app.style.visibility = 'visible';
+            }
+            console.log("اپ با موفقیت باز شد!");
+        }, 2000); // بعد از ۲ ثانیه
+    });
+</script>
 </body>
 </html>
