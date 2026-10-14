@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#05030f">
+<title>Epoch Love</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{--pink:#ff2d78;--purple:#a855f7;--cyan:#06b6d4;--gold:#fbbf24;--bg:#05030f;--glass:rgba(255,255,255,.06);--border:rgba(255,255,255,.08);--text:#fff;--dim:#9ca3af;--safe-top:0px}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);position:fixed;top:0;left:0;right:0;bottom:0;color:var(--text);overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+img,video{-webkit-touch-callout:none}
+
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+.orb.o1{width:350px;height:350px;background:radial-gradient(circle,#ff2d78,transparent 70%);top:-100px;right:-100px}
+.orb.o2{width:400px;height:400px;background:radial-gradient(circle,#a855f7,transparent 70%);bottom:-150px;left:-100px}
+.orb.o3{width:280px;height:280px;background:radial-gradient(circle,#06b6d4,transparent 70%);top:40%;left:30%}
+
+.logo-mark{display:inline-flex;align-items:center;justify-content:center;border-radius:22%;background:linear-gradient(135deg,#ff2d78 0%,#a855f7 60%,#06b6d4 100%);box-shadow:0 8px 30px rgba(255,45,120,.5)}
+
+#splash{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .5s,visibility .5s}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{width:110px;height:110px;font-size:60px}
+.splash-text{margin-top:26px;font-size:32px;font-weight:900;background:linear-gradient(135deg,#ff2d78,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.splash-sub{margin-top:8px;font-size:11px;color:var(--dim);letter-spacing:5px}
+
+#app{position:relative;z-index:1;height:100%;display:none;flex-direction:column;overflow:hidden}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:calc(var(--safe-top) + 4px) 16px 4px;flex-shrink:0}
+.top-brand{display:flex;align-items:center;gap:10px}
+.top-logo{width:34px;height:34px;font-size:17px}
+.top-brand h1{font-size:17px;font-weight:900;background:linear-gradient(135deg,#fff,#e9d5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.top-right{display:flex;gap:6px;align-items:center}
+.top-user{display:flex;align-items:center;background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:4px;cursor:pointer}
+.top-user .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;overflow:hidden;background-size:cover;background-position:center}
+.epc-pill{display:flex;align-items:center;gap:4px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:20px;padding:5px 10px;font-size:12px;font-weight:800;color:var(--gold);cursor:pointer}
+
+#pages{flex:1;position:relative;overflow:hidden;min-height:0}
+.page{position:absolute;inset:0;overflow-y:auto;padding:0 16px 100px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.page.active{opacity:1;visibility:visible}
+.page.no-scroll{overflow:hidden !important;display:flex;flex-direction:column}
+
+.discover-header{padding:4px 2px 12px;flex-shrink:0}
+.discover-header h2{font-size:24px;font-weight:900;margin-bottom:3px}
+.discover-header h2 span{background:linear-gradient(135deg,#ff2d78,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.discover-header p{font-size:12.5px;color:var(--dim)}
+
+.swipe-area{flex:1;min-height:0;position:relative;perspective:1200px;margin-bottom:14px}
+.swipe-card{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab;transition:transform .4s,opacity .3s}
+.swipe-card.dragging{transition:none}
+.swipe-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.swipe-card .noimg{width:100%;height:100%;background:linear-gradient(135deg,#ff2d78,#a855f7);display:flex;align-items:center;justify-content:center;font-size:100px;font-weight:900;opacity:.6}
+.swipe-card .info-overlay{position:absolute;bottom:0;left:0;right:0;padding:50px 20px 18px;background:linear-gradient(to top,rgba(0,0,0,.95),transparent);pointer-events:none}
+.swipe-card .info-overlay h3{font-size:22px;font-weight:900;display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.swipe-card .info-overlay .loc{font-size:12.5px;color:rgba(255,255,255,.85);margin-bottom:6px}
+.swipe-card .info-overlay .bio{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.swipe-card .photos-count{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);padding:5px 11px;border-radius:12px;font-size:11px;font-weight:700}
+.swipe-card .tap-hint{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.55);padding:5px 11px;border-radius:12px;font-size:10px;font-weight:600;opacity:.85}
+
+.swipe-actions{display:flex;justify-content:center;gap:18px;flex-shrink:0;padding:4px 0}
+.swipe-btn{width:60px;height:60px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;background:transparent}
+.swipe-btn.pass{border-color:#ef4444;color:#ef4444}
+.swipe-btn.super{border-color:#3b82f6;color:#3b82f6;width:48px;height:48px;font-size:19px;margin-top:6px}
+.swipe-btn.like{border-color:#22c55e;color:#22c55e}
+
+.section-title{padding:4px 2px 12px}
+.section-title h2{font-size:24px;font-weight:900;margin-bottom:3px}
+.section-title h2 span{background:linear-gradient(135deg,#ff2d78,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-title p{font-size:12.5px;color:var(--dim)}
+.match-list{display:flex;flex-direction:column;gap:10px}
+.match-item{display:flex;align-items:center;gap:14px;padding:14px;background:var(--glass);border:1px solid var(--border);border-radius:20px;cursor:pointer}
+.match-item .av-wrap{position:relative;flex-shrink:0}
+.match-item .av{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(168,85,247,.4)}
+.match-item .noimg{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff2d78,#a855f7);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800}
+.match-item .st{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;border:2.5px solid #05030f}
+.match-item .st.on{background:#22c55e}
+.match-item .st.off{background:#4b5563}
+.match-item .info{flex:1;min-width:0}
+.match-item .info h3{font-size:15px;font-weight:700;margin-bottom:3px}
+.match-item .info p{font-size:12px;color:var(--dim)}
+
+.empty{padding:60px 20px;text-align:center;color:var(--dim);font-size:14px;line-height:1.6}
+.empty .ico{font-size:56px;margin-bottom:16px;display:block;opacity:.7}
+.skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;border-radius:20px;animation:shim 1.5s infinite}
+.skel-card{height:80px;margin-bottom:10px}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.profile-head{text-align:center;padding:10px 8px 16px}
+.profile-head .big-av{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;object-fit:cover;border:3px solid rgba(168,85,247,.4)}
+.profile-head .big-ni{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,#ff2d78,#a855f7);display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900}
+.profile-head h2{font-size:23px;font-weight:900;margin-bottom:5px}
+.profile-head .sub{font-size:12.5px;color:var(--dim)}
+.profile-head .badges{display:flex;justify-content:center;gap:7px;margin-top:10px;flex-wrap:wrap}
+.badge{padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:700}
+.badge.blue{background:rgba(59,130,246,.15);color:#93c5fd}
+.badge.gold{background:rgba(251,191,36,.15);color:#fcd34d}
+.badge.pink{background:rgba(255,45,120,.15);color:#fda4af}
+
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.photo-cell{aspect-ratio:1;border-radius:14px;overflow:hidden;position:relative;background:var(--glass);border:1px solid var(--border);cursor:pointer}
+.photo-cell img{width:100%;height:100%;object-fit:cover}
+.photo-cell .num{position:absolute;bottom:4px;right:6px;font-size:10px;font-weight:700}
+.photo-cell.empty-cell{display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--dim);border-style:dashed}
+.info-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.info-card .lbl{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:5px}
+.info-card .val{font-size:14.5px;font-weight:600;line-height:1.5}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.qa-btn{padding:16px 12px;border-radius:18px;background:var(--glass);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.qa-btn .ico{font-size:24px}
+.qa-btn .lbl{font-size:12px;font-weight:700}
+
+#bottomNav{position:fixed;bottom:0;left:0;right:0;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0));background:rgba(5,3,15,.95);border-top:1px solid var(--border);display:flex;justify-content:space-around;z-index:200}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 4px;cursor:pointer;position:relative;min-height:58px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.nav-item .ic{font-size:19px;filter:grayscale(1) opacity(.5);pointer-events:none;transition:transform .15s}
+.nav-item.active .ic{filter:none;transform:scale(1.15)}
+.nav-item .lb{font-size:9.5px;font-weight:600;color:var(--dim);pointer-events:none}
+.nav-item.active .lb{background:linear-gradient(135deg,#ff2d78,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-item.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:3px;border-radius:3px;background:linear-gradient(90deg,#ff2d78,#a855f7)}
+.nav-item:active{background:rgba(255,255,255,.05)}
+
+#chatScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:none;flex-direction:column;transform:translateX(100%);transition:transform .3s}
+#chatScreen.open{display:flex;transform:translateX(0)}
+.chat-top{padding:calc(var(--safe-top) + 10px) 14px 10px;display:flex;align-items:center;gap:12px;background:rgba(5,3,15,.85);border-bottom:1px solid var(--border)}
+.chat-back{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--border);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-peer{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid rgba(168,85,247,.4)}
+.chat-peer-ni{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#ff2d78,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.chat-info{flex:1;min-width:0;cursor:pointer}
+.chat-info h3{font-size:15px;font-weight:700}
+.chat-info small{font-size:11.5px;color:var(--dim);display:block}
+.chat-info small.on{color:#22c55e}
+#messages{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:6px}
+.msg-wrap{display:flex;flex-direction:column}
+.msg-wrap.mine{align-items:flex-end}
+.msg-wrap.theirs{align-items:flex-start}
+.msg{max-width:78%;padding:9px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;word-wrap:break-word;cursor:pointer;-webkit-touch-callout:none;position:relative}
+.msg.mine{background:linear-gradient(135deg,#ff2d78,#a855f7);color:#fff;border-bottom-right-radius:5px}
+.msg.theirs{background:rgba(255,255,255,.08);border:1px solid var(--border);border-bottom-left-radius:5px}
+.msg .t{display:block;font-size:9.5px;opacity:.7;margin-top:3px}
+.msg .media-wrap{position:relative;margin-bottom:4px}
+.msg img{max-width:100%;border-radius:12px;display:block;cursor:pointer}
+.msg video{max-width:100%;border-radius:12px;display:block}
+.msg audio{width:200px;max-width:100%}
+.msg-reactions{display:inline-flex;gap:3px;margin-top:-10px;position:relative;z-index:3;align-self:flex-start;padding-left:8px}
+.msg-wrap.mine .msg-reactions{align-self:flex-end;padding-right:8px;padding-left:0}
+.reaction-badge{background:rgba(20,10,30,.95);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:2px 7px;font-size:12px;font-weight:700}
+
+.chat-input{padding:8px 10px calc(8px + env(safe-area-inset-bottom,0));background:rgba(5,3,15,.9);border-top:1px solid var(--border);display:flex;gap:6px;align-items:center}
+.cib{width:40px;height:40px;border-radius:50%;background:var(--glass);border:1px solid var(--border);color:#c4b5fd;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.cib.rec{background:#ef4444;color:#fff}
+.chat-input input{flex:1;padding:11px 15px;border-radius:22px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:#fff;font-size:14.5px;outline:none;min-width:0}
+.send-b{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:16px;cursor:pointer}
+
+#ctxMenu{position:fixed;background:rgba(20,15,35,.98);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px;z-index:5000;display:none;min-width:180px}
+#ctxMenu.show{display:block}
+.ctx-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:14px;cursor:pointer}
+.ctx-item.danger{color:#ef4444}
+
+#reactPicker{position:fixed;background:rgba(20,15,35,.98);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:8px 10px;z-index:5000;display:none;gap:6px}
+#reactPicker.show{display:flex}
+.react-item{font-size:26px;cursor:pointer;padding:2px 4px;line-height:1}
+
+.modal{position:fixed;inset:0;background:rgba(5,3,15,.85);z-index:2000;display:none;align-items:flex-end}
+.modal.open{display:flex}
+.modal-content{width:100%;max-height:88vh;background:linear-gradient(180deg,#150a2e,#05030f);border-radius:28px 28px 0 0;overflow-y:auto;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0));position:relative}
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+.modal-title{font-size:22px;font-weight:900;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--dim);margin-bottom:20px}
+
+#regScreen{position:fixed;inset:0;background:var(--bg);z-index:3000;display:none;flex-direction:column;overflow:hidden}
+#regScreen.open{display:flex}
+.reg-progress{height:4px;background:rgba(255,255,255,.06);flex-shrink:0;margin-top:var(--safe-top)}
+.reg-progress-bar{height:100%;background:linear-gradient(90deg,#ff2d78,#a855f7);width:0;transition:width .4s}
+.reg-body{flex:1;overflow-y:auto;padding:30px 20px 100px}
+.reg-step{display:none}
+.reg-step.active{display:block}
+.reg-title{font-size:26px;font-weight:900;margin-bottom:6px}
+.reg-title span{background:linear-gradient(135deg,#ff2d78,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.reg-sub{font-size:13.5px;color:var(--dim);margin-bottom:24px;line-height:1.5}
+.reg-field{margin-bottom:16px}
+.reg-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:8px;display:block}
+.reg-input{width:100%;padding:15px 18px;border-radius:16px;background:var(--glass);border:1.5px solid var(--border);color:#fff;font-size:15.5px;outline:none}
+.reg-input::placeholder{color:var(--dim)}
+.opt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.opt{padding:14px 10px;border-radius:16px;background:var(--glass);border:1.5px solid var(--border);color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-align:center}
+.opt.selected{background:linear-gradient(135deg,#ff2d78,#a855f7);border-color:transparent}
+.reg-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.reg-photo-cell{aspect-ratio:1;border-radius:16px;overflow:hidden;position:relative;background:var(--glass);border:1.5px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--dim);cursor:pointer}
+.reg-photo-cell.filled{border-style:solid;border-color:rgba(168,85,247,.4)}
+.reg-photo-cell img{width:100%;height:100%;object-fit:cover}
+.reg-photo-cell .del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.9);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:900;cursor:pointer;z-index:5}
+.reg-nav{position:fixed;bottom:0;left:0;right:0;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0));background:linear-gradient(to top,#05030f 60%,transparent);display:flex;gap:10px;z-index:3001}
+.reg-nav button{flex:1;padding:15px;border-radius:16px;border:none;font-size:15px;font-weight:800;cursor:pointer}
+.reg-nav .back{background:var(--glass);border:1px solid var(--border);color:#fff;flex:0 0 90px}
+.reg-nav .next{background:linear-gradient(135deg,#ff2d78,#a855f7);color:#fff}
+
+.btn-primary{width:100%;padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,#ff2d78,#a855f7);color:#fff;font-size:15px;font-weight:800;cursor:pointer}
+.btn-secondary{width:100%;padding:14px;border-radius:16px;border:1px solid var(--border);background:var(--glass);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px}
+
+.plan-card{padding:18px;border-radius:20px;background:var(--glass);border:1.5px solid var(--border);margin-bottom:12px;cursor:pointer;position:relative}
+.plan-card.featured{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(168,85,247,.12));border-color:rgba(251,191,36,.4)}
+.plan-card.featured::before{content:"POPULAR";position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000;font-size:9px;font-weight:900;padding:3px 8px;border-radius:8px}
+.plan-card h3{font-size:18px;font-weight:900;margin-bottom:4px}
+.plan-card .price{font-size:24px;font-weight:900;color:#fbbf24}
+.plan-card .price small{font-size:13px;color:var(--dim)}
+.plan-card .features{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.plan-card .feat{font-size:12.5px;color:#d1d5db}
+.plan-card .feat .chk{color:#22c55e;font-weight:900}
+
+.balance-hero{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(168,85,247,.1));border:1.5px solid rgba(251,191,36,.3);border-radius:24px;margin-bottom:20px}
+.balance-hero .epc-ico{font-size:48px}
+.balance-hero .amount{font-size:42px;font-weight:900;color:#fbbf24}
+.balance-hero .lbl{font-size:12px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+
+.tx-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--glass);border:1px solid var(--border);border-radius:14px;margin-bottom:8px}
+.tx-item .info h4{font-size:13.5px;font-weight:700;margin-bottom:2px}
+.tx-item .info small{font-size:11px;color:var(--dim)}
+.tx-item .amt{font-size:15px;font-weight:900}
+.tx-item .amt.plus{color:#22c55e}
+.tx-item .amt.minus{color:#ef4444}
+
+.ref-hero{text-align:center;padding:24px 16px;background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(6,182,212,.12));border:1.5px solid rgba(34,197,94,.3);border-radius:24px;margin-bottom:20px}
+.ref-hero .ico{font-size:52px}
+.ref-hero h2{font-size:22px;font-weight:900;margin-bottom:6px}
+.ref-hero p{font-size:13px;color:var(--dim);line-height:1.5}
+.ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.ref-stat{padding:16px;background:var(--glass);border:1px solid var(--border);border-radius:18px;text-align:center}
+.ref-stat .v{font-size:26px;font-weight:900;color:#fbbf24}
+.ref-stat .k{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:4px}
+.ref-code-box{background:var(--glass);border:1.5px dashed rgba(34,197,94,.4);border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}
+.ref-code-box .lbl{font-size:11px;color:var(--dim);letter-spacing:1px;font-weight:700;text-transform:uppercase;margin-bottom:8px}
+.ref-code-box .code{font-size:22px;font-weight:900;letter-spacing:3px;color:#22c55e}
+
+#celebrate{position:fixed;inset:0;background:rgba(5,3,15,.96);z-index:5000;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}
+#celebrate.show{display:flex}
+#celebrate .heart{font-size:100px}
+#celebrate h2{margin-top:18px;font-size:34px;font-weight:900;background:linear-gradient(135deg,#ff2d78,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#celebrate p{margin-top:10px;font-size:14.5px;color:var(--dim)}
+#celebrate button{margin-top:26px;padding:15px 30px;border-radius:20px;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(20,15,35,.98);border:1px solid var(--border);color:#fff;padding:12px 22px;border-radius:16px;font-size:14px;font-weight:600;z-index:9000;opacity:0;transition:all .3s;max-width:90%;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+#privacyBlur{position:fixed;inset:0;background:rgba(5,3,15,.98);z-index:99999;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px;color:#fff}
+#privacyBlur.show{display:flex}
+#privacyBlur .icon{font-size:72px;margin-bottom:20px}
+#privacyBlur h2{font-size:20px;font-weight:800;margin-bottom:10px}
+#privacyBlur p{font-size:14px;color:#9ca3af;line-height:1.6}
+#privacyBlur button{margin-top:24px;padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+::-webkit-scrollbar{display:none}
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-logo logo-mark"><span>💖</span></div>
+  <div class="splash-text">Epoch Love</div>
+  <div class="splash-sub">FIND YOUR SOULMATE</div>
+</div>
+
+<div class="bg-orbs">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+</div>
+
+<div id="privacyBlur">
+  <div class="icon">🔒</div>
+  <h2>Screenshot Detected</h2>
+  <p>For the privacy of our users,<br>screenshots are not allowed.</p>
+  <button onclick="document.getElementById('privacyBlur').classList.remove('show')">I Understand</button>
+</div>
+
+<div id="regScreen">
+  <div class="reg-progress"><div class="reg-progress-bar" id="regBar"></div></div>
+  <div class="reg-body">
+    <div class="reg-step active" data-step="0">
+      <div style="text-align:center;padding:30px 0">
+        <div style="font-size:64px;margin-bottom:14px">💖</div>
+        <div class="reg-title">Welcome to Epoch Love</div>
+        <div class="reg-sub">Find your perfect match, chat, and earn EPC tokens.</div>
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:rgba(251,191,36,.15);border:1.5px solid rgba(251,191,36,.4);border-radius:20px;font-size:15px;font-weight:800;color:#fbbf24">💎 +5 EPC Welcome Bonus!</div>
+      </div>
+    </div>
+    <div class="reg-step" data-step="1">
+      <div class="reg-title">What's your <span>name?</span></div>
+      <div class="reg-sub">This is how you'll appear.</div>
+      <div class="reg-field"><input class="reg-input" id="regName" placeholder="Enter your name" maxlength="30"></div>
+    </div>
+    <div class="reg-step" data-step="2">
+      <div class="reg-title">How <span>old</span> are you?</div>
+      <div class="reg-sub">You must be 18+</div>
+      <div class="opt-grid" id="ageGrid"></div>
+    </div>
+    <div class="reg-step" data-step="3">
+      <div class="reg-title">Your <span>gender?</span></div>
+      <div class="reg-sub">Helps us find matches.</div>
+      <div class="opt-grid" id="genderGrid">
+        <div class="opt" data-val="male">👨 Male</div>
+        <div class="opt" data-val="female">👩 Female</div>
+      </div>
+    </div>
+    <div class="reg-step" data-step="4">
+      <div class="reg-title">Looking <span>for?</span></div>
+      <div class="reg-sub">Who do you want to meet?</div>
+      <div class="opt-grid" style="grid-template-columns:repeat(3,1fr)" id="lookGrid">
+        <div class="opt" data-val="male">👨 Men</div>
+        <div class="opt" data-val="female">👩 Women</div>
+        <div class="opt" data-val="both">👫 Both</div>
+      </div>
+    </div>
+    <div class="reg-step" data-step="5">
+      <div class="reg-title">Where do you <span>live?</span></div>
+      <div class="reg-sub">Your location</div>
+      <div class="reg-field"><input class="reg-input" id="regCountry" placeholder="Country" maxlength="40"></div>
+      <div class="reg-field"><input class="reg-input" id="regCity" placeholder="City" maxlength="40"></div>
+    </div>
+    <div class="reg-step" data-step="6">
+      <div class="reg-title">About <span>you</span></div>
+      <div class="reg-sub">Optional</div>
+      <div class="reg-field"><textarea class="reg-input" id="regBio" rows="4" placeholder="Share your interests..." maxlength="300" style="resize:none;font-family:inherit"></textarea></div>
+    </div>
+    <div class="reg-step" data-step="7">
+      <div class="reg-title">Your <span>photos</span></div>
+      <div class="reg-sub">Add up to 6 photos.</div>
+      <div class="reg-photo-grid" id="regPhotos"></div>
+      <input type="file" id="regPhotoInput" accept="image/*" style="display:none">
+    </div>
+    <div class="reg-step" data-step="8">
+      <div style="text-align:center;padding:30px 0">
+        <div style="font-size:64px;margin-bottom:14px">🎉</div>
+        <div class="reg-title">You're all set!</div>
+        <div class="reg-sub">Start discovering amazing people!</div>
+      </div>
+    </div>
+  </div>
+  <div class="reg-nav">
+    <button class="back" id="regBackBtn" onclick="regBack()" style="display:none">Back</button>
+    <button class="next" id="regNextBtn" onclick="regNext()">Continue</button>
+  </div>
+</div>
+
+<div id="app">
+  <div class="top-bar">
+    <div class="top-brand">
+      <div class="top-logo logo-mark"><span style="font-size:17px">💖</span></div>
+      <h1>Epoch Love</h1>
+    </div>
+    <div class="top-right">
+      <div class="epc-pill" onclick="openBalance()">💎 <span id="epcBalance">0</span></div>
+      <div class="top-user" onclick="switchPage('profile')"><div class="av" id="topAvatar">?</div></div>
+    </div>
+  </div>
+  <div id="pages">
+    <div class="page no-scroll active" id="page-discover">
+      <div class="discover-header"><h2>Discover <span>Matches</span> ✨</h2><p>Swipe right to like</p></div>
+      <div class="swipe-area" id="swipeArea"></div>
+      <div class="swipe-actions">
+        <button class="swipe-btn pass" onclick="doSwipe('pass')">✕</button>
+        <button class="swipe-btn super" onclick="doSwipe('super')">⭐</button>
+        <button class="swipe-btn like" onclick="doSwipe('like')">❤</button>
+      </div>
+    </div>
+    <div class="page" id="page-matches">
+      <div class="section-title"><h2>Your <span>Matches</span> 💕</h2><p>People who liked you back</p></div>
+      <div class="match-list" id="matchList"></div>
+    </div>
+    <div class="page" id="page-liked">
+      <div class="section-title"><h2>Liked <span>You</span> ❤️</h2><p>Premium feature</p></div>
+      <div class="empty"><span class="ico">💎</span>Upgrade to Premium to see<button onclick="openPremium()" style="margin-top:20px;padding:14px 28px;border-radius:16px;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;display:block;margin-left:auto;margin-right:auto">💎 Go Premium</button></div>
+    </div>
+    <div class="page" id="page-profile"><div id="profileContent"></div></div>
+  </div>
+  <div id="bottomNav">
+    <div class="nav-item active" data-page="discover" onclick="switchPage('discover')"><div class="ic">🔥</div><div class="lb">Discover</div></div>
+    <div class="nav-item" data-page="matches" onclick="switchPage('matches')"><div class="ic">💕</div><div class="lb">Matches</div></div>
+    <div class="nav-item" data-page="liked" onclick="switchPage('liked')"><div class="ic">❤️</div><div class="lb">Liked You</div></div>
+    <div class="nav-item" data-page="profile" onclick="switchPage('profile')"><div class="ic">👤</div><div class="lb">Profile</div></div>
+  </div>
+</div>
+
+<div id="chatScreen">
+  <div class="chat-top">
+    <button class="chat-back" onclick="closeChat()">←</button>
+    <div id="chatPeerAv"></div>
+    <div class="chat-info" onclick="openPeerProfile()">
+      <h3 id="chatPeerName">-</h3>
+      <small id="chatPeerStatus">Offline</small>
+    </div>
+  </div>
+  <div id="messages"></div>
+  <div class="chat-input">
+    <button class="cib" onclick="document.getElementById('fileInput').click()">📎</button>
+    <button class="cib" id="voiceBtn" type="button">🎤</button>
+    <input type="text" id="msgInput" placeholder="Message..." onkeypress="if(event.key==='Enter')sendText()">
+    <button class="send-b" onclick="sendText()">➤</button>
+    <input type="file" id="fileInput" style="display:none" accept="image/*,video/*" onchange="uploadFile(event)">
+  </div>
+</div>
+
+<div id="ctxMenu"></div>
+<div id="reactPicker"></div>
+
+<div class="modal" id="profileModal" onclick="if(event.target===this)closeModal('profileModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+    <div id="profileModalBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="editModal" onclick="if(event.target===this)closeModal('editModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    <div class="modal-title">✏️ Edit Profile</div>
+    <div class="modal-sub">Update your information</div>
+    <div class="reg-field"><label class="reg-label">Name</label><input class="reg-input" id="editName" maxlength="30"></div>
+    <div class="reg-field"><label class="reg-label">Age</label><input class="reg-input" id="editAge" type="number" min="18" max="100"></div>
+    <div class="reg-field"><label class="reg-label">Gender</label><div class="opt-grid" id="editGenderGrid"><div class="opt" data-val="male">👨 Male</div><div class="opt" data-val="female">👩 Female</div></div></div>
+    <div class="reg-field"><label class="reg-label">Looking For</label><div class="opt-grid" style="grid-template-columns:repeat(3,1fr)" id="editLookGrid"><div class="opt" data-val="male">👨 Men</div><div class="opt" data-val="female">👩 Women</div><div class="opt" data-val="both">👫 Both</div></div></div>
+    <div class="reg-field"><label class="reg-label">Country</label><input class="reg-input" id="editCountry" maxlength="40"></div>
+    <div class="reg-field"><label class="reg-label">City</label><input class="reg-input" id="editCity" maxlength="40"></div>
+    <div class="reg-field"><label class="reg-label">Bio</label><textarea class="reg-input" id="editBio" rows="3" maxlength="300" style="resize:none;font-family:inherit"></textarea></div>
+    <button class="btn-primary" style="margin-top:10px" onclick="saveProfile()">Save Changes</button>
+  </div>
+</div>
+
+<div class="modal" id="photosModal" onclick="if(event.target===this)closeModal('photosModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('photosModal')">✕</button>
+    <div class="modal-title">📸 Manage Photos</div>
+    <div class="modal-sub">Add up to 6 photos. First is main.</div>
+    <div class="reg-photo-grid" id="profilePhotosGrid"></div>
+    <input type="file" id="profilePhotoInput" accept="image/*" style="display:none">
+  </div>
+</div>
+
+<div class="modal" id="premiumModal" onclick="if(event.target===this)closeModal('premiumModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('premiumModal')">✕</button>
+    <div class="modal-title">💎 Epoch Love Premium</div>
+    <div class="modal-sub">Unlock exclusive features</div>
+    <div class="plan-card featured" onclick="buyPremium('1m')"><h3>1 Month</h3><div class="price">500 <small>EPC</small></div><div class="features"><div class="feat"><span class="chk">✓</span> Unlimited messaging</div><div class="feat"><span class="chk">✓</span> See who liked you</div><div class="feat"><span class="chk">✓</span> 10x profile boost</div><div class="feat"><span class="chk">✓</span> Free searches</div></div></div>
+    <div class="plan-card" onclick="buyPremium('3m')"><h3>3 Months</h3><div class="price">1,200 <small>EPC</small></div><div class="features"><div class="feat"><span class="chk">✓</span> Everything from 1 Month</div><div class="feat"><span class="chk">✓</span> Save 300 EPC</div></div></div>
+    <div class="plan-card" onclick="buyPremium('6m')"><h3>6 Months</h3><div class="price">2,000 <small>EPC</small></div><div class="features"><div class="feat"><span class="chk">✓</span> Everything from 3 Months</div><div class="feat"><span class="chk">✓</span> Save 1,000 EPC</div></div></div>
+    <div style="font-size:12px;color:var(--dim);text-align:center;margin-top:16px">Balance: <b style="color:#fbbf24"><span id="premiumBalance">0</span> EPC</b></div>
+  </div>
+</div>
+
+<div class="modal" id="balanceModal" onclick="if(event.target===this)closeModal('balanceModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('balanceModal')">✕</button>
+    <div class="modal-title">💎 Your Wallet</div>
+    <div class="balance-hero"><div class="epc-ico">💎</div><div class="amount" id="balanceAmount">0</div><div class="lbl">Total EPC</div></div>
+    <div style="font-size:14px;font-weight:800;margin-bottom:12px">Recent Transactions</div>
+    <div id="txList"></div>
+  </div>
+</div>
+
+<div class="modal" id="refModal" onclick="if(event.target===this)closeModal('refModal')">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('refModal')">✕</button>
+    <div class="ref-hero"><div class="ico">🎁</div><h2>Invite Friends</h2><p>Earn <b style="color:#22c55e">+5 EPC</b> per friend who signs up and completes their profile.</p></div>
+    <div class="ref-stats"><div class="ref-stat"><div class="v" id="refCount">0</div><div class="k">Referrals</div></div><div class="ref-stat"><div class="v" id="refEarned">0</div><div class="k">EPC Earned</div></div></div>
+    <div class="ref-code-box"><div class="lbl">Your Invite Code</div><div class="code" id="refCode">...</div></div>
+    <button class="btn-primary" onclick="shareReferral()">📤 Share Invite Link</button>
+    <button class="btn-secondary" onclick="copyReferral()">📋 Copy Code</button>
+  </div>
+</div>
+
+<div id="celebrate">
+  <div class="heart">💕</div>
+  <h2>IT'S A MATCH!</h2>
+  <p id="celebrateText">You both liked each other!</p>
+  <button onclick="closeCelebrate()">Send a Message</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var tg = window.Telegram ? window.Telegram.WebApp : null;
+if (tg){ try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes(); } catch(e){} }
+try { tg && tg.setHeaderColor && tg.setHeaderColor('#05030f'); } catch(e){}
+
+(function(){
+  var top = 40;
+  try { if (tg && tg.contentSafeAreaInset && tg.contentSafeAreaInset.top) top = Math.max(40, tg.contentSafeAreaInset.top); } catch(e){}
+  document.documentElement.style.setProperty('--safe-top', top + 'px');
+})();
+
+var userId = null;
+var userProfile = null;
+var currentPeer = null;
+var ws = null;
+var renderedMsgIds = {};
+var peerStatusTimer = null;
+var pingTimer = null;
+var matchesList = [];
+var currentCard = null;
+var dragState = {active:false, startX:0, startY:0, currentX:0, currentY:0};
+var lastTapTime = 0;
+var regStep = 0;
+var regData = { name: "", age: null, gender: null, looking_for: null, country: "", city: "", bio: "", photos: [] };
+var editData = { gender: null, looking_for: null };
+
+function getUserId(){
+  try { if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) return String(tg.initDataUnsafe.user.id); } catch(e){}
+  var p = new URLSearchParams(location.search);
+  return p.get('user_id');
+}
+function getStartParam(){
+  try { if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) return tg.initDataUnsafe.start_param; } catch(e){}
+  var p = new URLSearchParams(location.search);
+  return p.get('ref') || '';
+}
+function getFirstName(){
+  try { if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) return tg.initDataUnsafe.user.first_name || "User"; } catch(e){}
+  return "User";
+}
+function esc(s){
+  if (!s) return "";
+  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+function msgId(m){ return m.from + "_" + Math.round(m.ts * 1000); }
+function containsLink(text){
+  if (!text) return false;
+  return /(https?:\/\/|www\.|t\.me\/|telegram\.me\/|@[a-zA-Z0-9_]{4,}|[a-zA-Z0-9-]+\.(com|net|org|io|me|co|ir|ru|xyz|app|dev|info|site|online|tech))/i.test(text);
+}
+function compressImage(file, maxSize, quality){
+  return new Promise(function(resolve, reject){
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var w = img.width, h = img.height;
+      if (w > h && w > maxSize){ h = Math.round(h * maxSize / w); w = maxSize; }
+      else if (h > maxSize){ w = Math.round(w * maxSize / h); h = maxSize; }
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      c.toBlob(function(b){ if (b) resolve(new File([b], 'photo.jpg', {type:'image/jpeg'})); else reject(); }, 'image/jpeg', quality);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+// ===== SCREENSHOT DETECTION =====
+var _lastHidden = 0;
+document.addEventListener('visibilitychange', function(){
+  if (document.hidden){ _lastHidden = Date.now(); }
+  else {
+    if (Date.now() - _lastHidden < 1500){
+      document.getElementById('privacyBlur').classList.add('show');
+      if (navigator.vibrate) navigator.vibrate([200,100,200]);
+    }
+  }
+});
+document.addEventListener('keyup', function(e){
+  if (e.key === 'PrintScreen' || e.keyCode === 44){
+    document.getElementById('privacyBlur').classList.add('show');
+    try { navigator.clipboard.writeText(''); } catch(err){}
+  }
+});
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, {passive:false});
+document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; });
+
+// ===== REGISTRATION =====
+function showRegStep(n){
+  regStep = n;
+  var steps = document.querySelectorAll('.reg-step');
+  for (var i = 0; i < steps.length; i++){
+    if (parseInt(steps[i].dataset.step) === n) steps[i].classList.add('active');
+    else steps[i].classList.remove('active');
+  }
+  if (n === 7) setTimeout(renderRegPhotos, 50);
+  document.getElementById('regBar').style.width = ((n / 8) * 100) + '%';
+  document.getElementById('regBackBtn').style.display = (n > 0 && n < 8) ? 'flex' : 'none';
+  var btn = document.getElementById('regNextBtn');
+  if (n === 0) btn.textContent = "Get Started";
+  else if (n === 8) btn.textContent = "Open Epoch Love";
+  else btn.textContent = "Continue";
+}
+function regBack(){ if (regStep > 0) showRegStep(regStep - 1); }
+function regNext(){
+  if (regStep === 1){ var v = document.getElementById('regName').value.trim(); if (v.length < 2){ toast("Name too short"); return; } regData.name = v; }
+  if (regStep === 2 && !regData.age){ toast("Select age"); return; }
+  if (regStep === 3 && !regData.gender){ toast("Select gender"); return; }
+  if (regStep === 4 && !regData.looking_for){ toast("Select looking for"); return; }
+  if (regStep === 5){
+    var c = document.getElementById('regCountry').value.trim();
+    var cy = document.getElementById('regCity').value.trim();
+    if (c.length < 2){ toast("Enter country"); return; }
+    if (cy.length < 2){ toast("Enter city"); return; }
+    regData.country = c; regData.city = cy;
+  }
+  if (regStep === 6) regData.bio = document.getElementById('regBio').value.trim();
+  if (regStep === 7){
+    if (regData.photos.length === 0){ toast("Add at least 1 photo"); return; }
+    completeRegistration(function(){ showRegStep(8); });
+    return;
+  }
+  if (regStep === 8){ enterApp(); return; }
+  showRegStep(regStep + 1);
+}
+function completeRegistration(cb){
+  fetch(getApiUrl('/api/register/complete', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(Object.assign({user_id: userId}, regData))
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok) userProfile = d.profile;
+    if (cb) cb();
+  }).catch(function(){ toast("Save failed"); if (cb) cb(); });
+}
+function initRegAgeGrid(){
+  var grid = document.getElementById('ageGrid'); grid.innerHTML = '';
+  for (var a = 18; a <= 60; a++){
+    (function(age){
+      var div = document.createElement('div'); div.className = 'opt'; div.textContent = age;
+      div.onclick = function(){ var s = document.querySelectorAll('#ageGrid .opt'); for (var j=0;j<s.length;j++) s[j].classList.remove('selected'); div.classList.add('selected'); regData.age = age; };
+      grid.appendChild(div);
+    })(a);
+  }
+}
+function initOptGrid(id, field){
+  var opts = document.querySelectorAll('#' + id + ' .opt');
+  for (var i = 0; i < opts.length; i++){
+    (function(el){
+      el.onclick = function(){
+        var s = document.querySelectorAll('#' + id + ' .opt');
+        for (var j = 0; j < s.length; j++) s[j].classList.remove('selected');
+        el.classList.add('selected');
+        regData[field] = el.dataset.val;
+      };
+    })(opts[i]);
+  }
+}
+function renderRegPhotos(){
+  var grid = document.getElementById('regPhotos'); if (!grid) return;
+  grid.innerHTML = '';
+  for (var i = 0; i < 6; i++){
+    (function(idx){
+      var cell = document.createElement('div');
+      cell.className = 'reg-photo-cell';
+      if (idx < regData.photos.length){
+        cell.classList.add('filled');
+        var img = document.createElement('img'); img.src = regData.photos[idx]; cell.appendChild(img);
+        var del = document.createElement('div'); del.className = 'del'; del.textContent = '×';
+        del.onclick = function(e){ e.stopPropagation(); removeRegPhoto(idx); };
+        cell.appendChild(del);
+        cell.onclick = function(){ document.getElementById('regPhotoInput').click(); };
+      } else if (idx === regData.photos.length){
+        cell.textContent = '+';
+        cell.onclick = function(){ document.getElementById('regPhotoInput').click(); };
+      } else { cell.style.opacity = '.3'; }
+      grid.appendChild(cell);
+    })(i);
+  }
+}
+function removeRegPhoto(idx){
+  regData.photos.splice(idx, 1);
+  fetch(getApiUrl('/api/register/delete_photo', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, index: idx})}).catch(function(){});
+  renderRegPhotos();
+}
+document.getElementById('regPhotoInput').onchange = function(e){
+  var f = e.target.files[0]; if (!f) return; e.target.value = '';
+  compressImage(f, 1200, 0.75).then(function(file){
+    var form = new FormData(); form.append('user_id', userId); form.append('photo', file);
+    return fetch(getApiUrl('/api/register/photo', {method:'POST', body: form});
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){ regData.photos.push(d.url); renderRegPhotos(); }
+    else toast(d.error || "Upload failed");
+  }).catch(function(){ toast("Upload error"); });
+};
+
+// ===== MAIN APP =====
+function enterApp(){
+  document.getElementById('regScreen').classList.remove('open');
+  document.getElementById('app').style.display = 'flex';
+  fetch(getApiUrl('/api/user/' + userId).then(function(r){ return r.json(); }).then(function(u){
+    userProfile = u; updateUserUI(); connectWS(); loadDiscover();
+  }).catch(function(){});
+}
+function updateUserUI(){
+  if (!userProfile) return;
+  var topAv = document.getElementById('topAvatar');
+  var photos = userProfile.photos || [];
+  if (photos.length){
+    topAv.style.backgroundImage = 'url(' + photos[0] + ')';
+    topAv.textContent = '';
+  } else {
+    topAv.textContent = (userProfile.name || '?')[0].toUpperCase();
+  }
+  document.getElementById('epcBalance').textContent = userProfile.epc_balance || 0;
+}
+function switchPage(name){
+  var navs = document.querySelectorAll('.nav-item');
+  for (var i = 0; i < navs.length; i++){
+    if (navs[i].dataset.page === name) navs[i].classList.add('active');
+    else navs[i].classList.remove('active');
+  }
+  var pages = document.querySelectorAll('.page');
+  for (var j = 0; j < pages.length; j++) pages[j].classList.remove('active');
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'matches') loadMatches();
+  if (name === 'profile') loadProfile();
+  if (name === 'discover') loadDiscover();
+}
+
+function loadDiscover(){
+  var area = document.getElementById('swipeArea');
+  var old = area.querySelectorAll('.swipe-card, .empty');
+  for (var i = 0; i < old.length; i++) old[i].remove();
+  fetch(getApiUrl('/api/discover/' + userId).then(function(r){
+    if (r.status === 402) return {error:'not_enough_epc'};
+    return r.json();
+  }).then(function(d){
+    if (d.error === 'not_enough_epc'){
+      area.innerHTML = '<div class="empty" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="ico">💎</span>Not enough EPC<br><button onclick="openPremium()" style="margin-top:20px;padding:14px 28px;border-radius:16px;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer">💎 Go Premium</button></div>';
+      return;
+    }
+    if (typeof d.balance === 'number'){ userProfile.epc_balance = d.balance; updateUserUI(); }
+    if (!d.profiles || d.profiles.length === 0){
+      area.innerHTML = '<div class="empty" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="ico">🎉</span>That\'s everyone!<br>Check back later</div>';
+      return;
+    }
+    var q = d.profiles.slice().reverse();
+    for (var i = 0; i < Math.min(q.length, 3); i++) createCard(q[i], i);
+  }).catch(function(){});
+}
+function createCard(profile, si){
+  var area = document.getElementById('swipeArea');
+  var card = document.createElement('div');
+  card.className = 'swipe-card';
+  card.dataset.userId = profile.id;
+  card.style.transform = 'scale(' + (1 - si * 0.05) + ') translateY(' + (si * 8) + 'px)';
+  card.style.zIndex = 10 - si;
+  var inner = '';
+  if (profile.photo) inner += '<img src="' + profile.photo + '" draggable="false">';
+  else inner += '<div class="noimg">' + ((profile.name||'?')[0] || '?').toUpperCase() + '</div>';
+  inner += '<div class="photos-count">📷 ' + ((profile.photos && profile.photos.length) || 1) + '</div>';
+  if (si === 0) inner += '<div class="tap-hint">👆 Tap for details</div>';
+  inner += '<div class="info-overlay"><h3>' + esc(profile.name) + ', ' + profile.age + '</h3>';
+  inner += '<div class="loc">📍 ' + esc(profile.city) + ', ' + esc(profile.country) + '</div>';
+  inner += '<div class="bio">' + esc(profile.bio || 'No bio yet') + '</div></div>';
+  card.innerHTML = inner;
+  if (si === 0){ currentCard = card; attachDrag(card); }
+  area.appendChild(card);
+}
+function attachDrag(card){
+  card.addEventListener('touchstart', startDrag, {passive:false});
+  card.addEventListener('mousedown', startDrag);
+}
+function startDrag(e){
+  if (!currentCard) return;
+  dragState.active = true;
+  var t = e.touches ? e.touches[0] : e;
+  dragState.startX = t.clientX; dragState.startY = t.clientY;
+  dragState.currentX = 0; dragState.currentY = 0;
+  currentCard.classList.add('dragging');
+  document.addEventListener('touchmove', moveDrag, {passive:false});
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('mouseup', endDrag);
+}
+function moveDrag(e){
+  if (!dragState.active || !currentCard) return;
+  var t = e.touches ? e.touches[0] : e;
+  var dx = t.clientX - dragState.startX;
+  var dy = t.clientY - dragState.startY;
+  dragState.currentX = dx; dragState.currentY = dy;
+  currentCard.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx*0.08) + 'deg)';
+  if (e.cancelable) e.preventDefault();
+}
+function endDrag(){
+  if (!dragState.active) return;
+  dragState.active = false;
+  document.removeEventListener('touchmove', moveDrag);
+  document.removeEventListener('mousemove', moveDrag);
+  document.removeEventListener('touchend', endDrag);
+  document.removeEventListener('mouseup', endDrag);
+  if (!currentCard) return;
+  currentCard.classList.remove('dragging');
+  var dx = dragState.currentX, dy = dragState.currentY;
+  if (Math.abs(dx) < 10 && Math.abs(dy) < 10){
+    currentCard.style.transform = 'translate(0,0) rotate(0)';
+    showProfileDetail(currentCard.dataset.userId);
+    return;
+  }
+  if (dx > 100) animateSwipe(currentCard, 'right');
+  else if (dx < -100) animateSwipe(currentCard, 'left');
+  else currentCard.style.transform = 'translate(0,0) rotate(0)';
+}
+function animateSwipe(card, dir){
+  var uid = card.dataset.userId;
+  var tx = dir === 'right' ? 500 : -500;
+  card.style.transform = 'translate(' + tx + 'px, 100px) rotate(' + (dir==='right'?30:-30) + 'deg)';
+  card.style.opacity = '0';
+  setTimeout(function(){
+    card.remove();
+    sendReaction(uid, dir === 'right' ? 'like' : 'pass');
+    var area = document.getElementById('swipeArea');
+    var cards = area.querySelectorAll('.swipe-card');
+    for (var i = 0; i < cards.length; i++){
+      cards[i].style.transform = 'scale(' + (1 - i*0.05) + ') translateY(' + (i*8) + 'px)';
+      cards[i].style.zIndex = 10 - i;
+      if (i === 0){ currentCard = cards[i]; attachDrag(cards[i]); }
+    }
+    if (cards.length === 0) loadDiscover();
+  }, 400);
+}
+function doSwipe(action){
+  if (!currentCard) return;
+  var uid = currentCard.dataset.userId;
+  if (action === 'like') animateSwipe(currentCard, 'right');
+  else if (action === 'pass') animateSwipe(currentCard, 'left');
+  else if (action === 'super'){ sendReaction(uid, 'super'); animateSwipe(currentCard, 'right'); }
+}
+function sendReaction(targetId, action){
+  fetch(getApiUrl('/api/react', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({from: userId, to: targetId, action: action})}).catch(function(){});
+}
+function openPeerProfile(){
+  if (currentPeer && currentPeer.id) showProfileDetail(currentPeer.id);
+}
+function showProfileDetail(uid){
+  fetch(getApiUrl('/api/user/' + uid).then(function(r){ return r.json(); }).then(function(u){
+    if (!u || u.error) return;
+    var photos = u.photos || [];
+    var gEmoji = u.gender === 'male' ? '♂️' : (u.gender === 'female' ? '♀️' : '⚧');
+    var gLabel = u.gender === 'male' ? 'Male' : (u.gender === 'female' ? 'Female' : 'Other');
+    var html = '';
+    if (photos.length){
+      html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px">';
+      for (var i = 0; i < photos.length; i++) html += '<div style="aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.05)"><img src="' + photos[i] + '" style="width:100%;height:100%;object-fit:cover"></div>';
+      html += '</div>';
+    }
+    html += '<h2 style="font-size:24px;font-weight:900;margin-bottom:6px;text-align:center">' + esc(u.name) + ', ' + u.age + '</h2>';
+    html += '<div style="text-align:center;font-size:13px;color:#9ca3af;margin-bottom:10px">📍 ' + esc(u.city || '?') + ', ' + esc(u.country || '?') + '</div>';
+    html += '<div style="text-align:center;margin-bottom:16px"><span style="padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:700;background:rgba(255,45,120,.15);color:#fda4af">' + gEmoji + ' ' + gLabel + '</span></div>';
+    if (u.bio) html += '<div style="background:rgba(255,255,255,.05);border-radius:18px;padding:14px;margin-bottom:12px">' + esc(u.bio) + '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">';
+    html += '<button id="pdPass" style="padding:16px;border-radius:16px;border:2px solid #ef4444;color:#ef4444;font-size:22px;background:transparent;cursor:pointer">✕</button>';
+    html += '<button id="pdLike" style="padding:16px;border-radius:16px;border:2px solid #22c55e;color:#22c55e;font-size:22px;background:transparent;cursor:pointer">❤</button>';
+    html += '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">';
+    html += '<button id="pdBlock" style="padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:13px;font-weight:700;cursor:pointer">🚫 Block</button>';
+    html += '<button id="pdReport" style="padding:14px;border-radius:16px;border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#ef4444;font-size:13px;font-weight:700;cursor:pointer">⚠️ Report</button>';
+    html += '</div>';
+    document.getElementById('profileModalBody').innerHTML = html;
+    document.getElementById('profileModal').classList.add('open');
+    document.getElementById('pdPass').onclick = function(){ closeModal('profileModal'); doQuickAction('pass', uid); };
+    document.getElementById('pdLike').onclick = function(){ closeModal('profileModal'); doQuickAction('like', uid); };
+    document.getElementById('pdBlock').onclick = function(){
+      if (!confirm("Block this user?")) return;
+      fetch(getApiUrl('/api/block', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, blocked_id: uid})}).then(function(){
+        closeModal('profileModal'); toast("🚫 Blocked");
+        if (currentCard && currentCard.dataset.userId === uid) animateSwipe(currentCard, 'left');
+      });
+    };
+    document.getElementById('pdReport').onclick = function(){
+      if (!confirm("Report this user?")) return;
+      fetch(getApiUrl('/api/report', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, reported_id: uid})}).then(function(){
+        closeModal('profileModal'); toast("✅ Reported");
+      });
+    };
+  });
+}
+function doQuickAction(action, uid){
+  sendReaction(uid, action);
+  if (currentCard && currentCard.dataset.userId === uid){
+    if (action === 'like' || action === 'super') animateSwipe(currentCard, 'right');
+    else animateSwipe(currentCard, 'left');
+  }
+}
+
+function loadMatches(){
+  var el = document.getElementById('matchList');
+  el.innerHTML = '<div class="skel skel-card"></div><div class="skel skel-card"></div>';
+  fetch(getApiUrl('/api/matches/' + userId).then(function(r){ return r.json(); }).then(function(d){
+    matchesList = d.matches || [];
+    if (matchesList.length === 0){ el.innerHTML = '<div class="empty"><span class="ico">💔</span>No matches yet<br>Go to Discover!</div>'; return; }
+    el.innerHTML = '';
+    for (var i = 0; i < matchesList.length; i++){
+      (function(m){
+        var div = document.createElement('div'); div.className = 'match-item';
+        var av = m.photo ? '<img class="av" src="' + m.photo + '">' : '<div class="noimg">' + esc((m.name||'?')[0]) + '</div>';
+        div.innerHTML = '<div class="av-wrap">' + av + '<div class="st ' + (m.online ? 'on' : 'off') + '"></div></div>' +
+          '<div class="info"><h3>' + esc(m.name) + ', ' + m.age + '</h3><p>📍 ' + esc(m.city) + '</p></div>';
+        div.onclick = function(){ openChat(m); };
+        el.appendChild(div);
+      })(matchesList[i]);
+    }
+  }).catch(function(){ el.innerHTML = '<div class="empty">⚠️ Failed</div>'; });
+}
+
+function loadProfile(){
+  var el = document.getElementById('profileContent');
+  fetch(getApiUrl('/api/user/' + userId).then(function(r){ return r.json(); }).then(function(u){
+    userProfile = u; updateUserUI();
+    var photos = u.photos || [];
+    var html = '<div class="profile-head">';
+    if (photos.length) html += '<img class="big-av" src="' + photos[0] + '">';
+    else html += '<div class="big-ni">' + (u.name || '?')[0].toUpperCase() + '</div>';
+    html += '<h2>' + esc(u.name) + ', ' + u.age + '</h2>';
+    html += '<div class="sub">📍 ' + esc(u.city || '?') + ', ' + esc(u.country || '?') + '</div>';
+    html += '<div class="badges">';
+    var gEmoji = u.gender === 'male' ? '♂️' : (u.gender === 'female' ? '♀️' : '⚧');
+    var gLabel = u.gender === 'male' ? 'Male' : (u.gender === 'female' ? 'Female' : 'Other');
+    html += '<span class="badge pink">' + gEmoji + ' ' + gLabel + '</span>';
+    if (u.premium) html += '<span class="badge gold">💎 Premium</span>';
+    html += '</div></div>';
+    html += '<div class="quick-actions">';
+    html += '<div class="qa-btn" onclick="openPremium()"><div class="ico">💎</div><div class="lbl">' + (u.premium ? 'Premium' : 'Go Premium') + '</div></div>';
+    html += '<div class="qa-btn" onclick="openRef()"><div class="ico">🎁</div><div class="lbl">Invite & Earn</div></div>';
+    html += '</div>';
+    html += '<div class="quick-actions">';
+    html += '<div class="qa-btn" onclick="openEdit()"><div class="ico">✏️</div><div class="lbl">Edit Profile</div></div>';
+    html += '<div class="qa-btn" onclick="openPhotos()"><div class="ico">📸</div><div class="lbl">Manage Photos</div></div>';
+    html += '</div>';
+    html += '<div class="quick-actions">';
+    html += '<div class="qa-btn" onclick="openBalance()"><div class="ico">💰</div><div class="lbl">Wallet</div></div>';
+    html += '</div>';
+    html += '<div class="photos-grid">';
+    for (var i = 0; i < 6; i++){
+      if (i < photos.length) html += '<div class="photo-cell" onclick="openPhotos()"><img src="' + photos[i] + '"><div class="num">' + (i+1) + '</div></div>';
+      else html += '<div class="photo-cell empty-cell" onclick="openPhotos()">+</div>';
+    }
+    html += '</div>';
+    if (u.bio) html += '<div class="info-card"><div class="lbl">About Me</div><div class="val">' + esc(u.bio) + '</div></div>';
+    html += '<div class="info-card"><div class="lbl">Wallet</div><div class="val" style="color:#fbbf24">💎 ' + (u.epc_balance || 0) + ' EPC</div></div>';
+    el.innerHTML = html;
+  }).catch(function(){ el.innerHTML = '<div class="empty">⚠️ Failed</div>'; });
+}
+
+// ===== EDIT PROFILE =====
+function openEdit(){
+  if (!userProfile) return;
+  document.getElementById('editName').value = userProfile.name || '';
+  document.getElementById('editAge').value = userProfile.age || '';
+  document.getElementById('editCountry').value = userProfile.country || '';
+  document.getElementById('editCity').value = userProfile.city || '';
+  document.getElementById('editBio').value = userProfile.bio || '';
+  editData.gender = userProfile.gender;
+  editData.looking_for = userProfile.looking_for || 'both';
+  var gOpts = document.querySelectorAll('#editGenderGrid .opt');
+  for (var i = 0; i < gOpts.length; i++){
+    if (gOpts[i].dataset.val === editData.gender) gOpts[i].classList.add('selected');
+    else gOpts[i].classList.remove('selected');
+    (function(el){
+      el.onclick = function(){
+        var s = document.querySelectorAll('#editGenderGrid .opt');
+        for (var j = 0; j < s.length; j++) s[j].classList.remove('selected');
+        el.classList.add('selected');
+        editData.gender = el.dataset.val;
+      };
+    })(gOpts[i]);
+  }
+  var lOpts = document.querySelectorAll('#editLookGrid .opt');
+  for (var k = 0; k < lOpts.length; k++){
+    if (lOpts[k].dataset.val === editData.looking_for) lOpts[k].classList.add('selected');
+    else lOpts[k].classList.remove('selected');
+    (function(el){
+      el.onclick = function(){
+        var s = document.querySelectorAll('#editLookGrid .opt');
+        for (var j = 0; j < s.length; j++) s[j].classList.remove('selected');
+        el.classList.add('selected');
+        editData.looking_for = el.dataset.val;
+      };
+    })(lOpts[k]);
+  }
+  document.getElementById('editModal').classList.add('open');
+}
+function saveProfile(){
+  var name = document.getElementById('editName').value.trim();
+  var age = parseInt(document.getElementById('editAge').value) || null;
+  var country = document.getElementById('editCountry').value.trim();
+  var city = document.getElementById('editCity').value.trim();
+  var bio = document.getElementById('editBio').value.trim();
+  if (name.length < 2){ toast("Name too short"); return; }
+  if (!age || age < 18){ toast("Age must be 18+"); return; }
+  if (!editData.gender){ toast("Select gender"); return; }
+  fetch(getApiUrl('/api/profile/update', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      user_id: userId, name: name, age: age,
+      gender: editData.gender, looking_for: editData.looking_for,
+      country: country, city: city, bio: bio
+    })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){ toast("✅ Profile updated"); userProfile = d.profile; updateUserUI(); closeModal('editModal'); loadProfile(); }
+    else toast("Failed: " + (d.error || 'unknown'));
+  }).catch(function(){ toast("Network error"); });
+}
+
+// ===== PHOTO MANAGEMENT =====
+function openPhotos(){ renderProfilePhotos(); document.getElementById('photosModal').classList.add('open'); }
+function renderProfilePhotos(){
+  var grid = document.getElementById('profilePhotosGrid');
+  if (!grid || !userProfile) return;
+  var photos = userProfile.photos || [];
+  grid.innerHTML = '';
+  for (var i = 0; i < 6; i++){
+    (function(idx){
+      var cell = document.createElement('div');
+      cell.className = 'reg-photo-cell';
+      if (idx < photos.length){
+        cell.classList.add('filled');
+        var img = document.createElement('img'); img.src = photos[idx]; cell.appendChild(img);
+        var del = document.createElement('div'); del.className = 'del'; del.textContent = '×';
+        del.onclick = function(e){ e.stopPropagation(); deleteProfilePhoto(idx); };
+        cell.appendChild(del);
+        cell.onclick = function(){ document.getElementById('profilePhotoInput').click(); };
+      } else if (idx === photos.length){
+        cell.textContent = '+';
+        cell.onclick = function(){ document.getElementById('profilePhotoInput').click(); };
+      } else { cell.style.opacity = '.3'; }
+      grid.appendChild(cell);
+    })(i);
+  }
+}
+function deleteProfilePhoto(idx){
+  fetch(getApiUrl('/api/register/delete_photo', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, index: idx})}).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){ userProfile.photos = d.photos; renderProfilePhotos(); loadProfile(); toast("🗑️ Deleted"); }
+  }).catch(function(){ toast("Delete failed"); });
+}
+document.getElementById('profilePhotoInput').onchange = function(e){
+  var f = e.target.files[0]; if (!f) return; e.target.value = '';
+  compressImage(f, 1200, 0.75).then(function(file){
+    var form = new FormData(); form.append('user_id', userId); form.append('photo', file);
+    return fetch(getApiUrl('/api/register/photo', {method:'POST', body: form});
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){
+      fetch(getApiUrl('/api/user/' + userId).then(function(r){ return r.json(); }).then(function(u){
+        userProfile = u; renderProfilePhotos(); loadProfile(); toast("✅ Added");
+      });
+    } else toast(d.error || "Upload failed");
+  }).catch(function(){ toast("Upload error"); });
+};
+
+function openPremium(){ if (userProfile) document.getElementById('premiumBalance').textContent = userProfile.epc_balance || 0; document.getElementById('premiumModal').classList.add('open'); }
+function buyPremium(plan){
+  fetch(getApiUrl('/api/premium/purchase', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, plan: plan})}).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){ toast("💎 Premium activated!"); userProfile.epc_balance = d.new_balance; userProfile.premium = true; updateUserUI(); closeModal('premiumModal'); loadProfile(); }
+    else if (d.error === 'insufficient_balance') toast("Not enough EPC. Need " + d.needed + ", have " + d.balance);
+    else toast("Failed: " + (d.error || 'unknown'));
+  }).catch(function(){ toast("Network error"); });
+}
+function openBalance(){
+  document.getElementById('balanceModal').classList.add('open');
+  fetch(getApiUrl('/api/balance/' + userId).then(function(r){ return r.json(); }).then(function(d){
+    document.getElementById('balanceAmount').textContent = d.balance || 0;
+    var list = document.getElementById('txList');
+    if (!d.transactions || d.transactions.length === 0){ list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:20px;font-size:13px">No transactions yet</div>'; return; }
+    list.innerHTML = '';
+    for (var i = 0; i < d.transactions.length; i++){
+      var tx = d.transactions[i];
+      var div = document.createElement('div'); div.className = 'tx-item';
+      var date = new Date(tx.ts*1000).toLocaleDateString([], {month:'short', day:'numeric'});
+      var sign = tx.amount > 0 ? '+' : '';
+      div.innerHTML = '<div class="info"><h4>' + esc(tx.note || tx.type) + '</h4><small>' + date + ' • ' + esc(tx.type) + '</small></div>' +
+        '<div class="amt ' + (tx.amount>0?'plus':'minus') + '">' + sign + tx.amount + ' EPC</div>';
+      list.appendChild(div);
+    }
+  }).catch(function(){});
+}
+function openRef(){
+  document.getElementById('refModal').classList.add('open');
+  document.getElementById('refCode').textContent = '...';
+  fetch(getApiUrl('/api/referral/' + userId).then(function(r){ return r.json(); }).then(function(d){
+    document.getElementById('refCode').textContent = d.ref_code || '--------';
+    document.getElementById('refCount').textContent = d.count || 0;
+    document.getElementById('refEarned').textContent = d.earned || 0;
+  }).catch(function(){ document.getElementById('refCode').textContent = 'ERROR'; });
+}
+function shareReferral(){
+  var code = document.getElementById('refCode').textContent.trim();
+  if (!code || code === '--------' || code === '...'){ toast("Code not loaded"); return; }
+  var link = 'https://t.me/EpochLove_bot?startapp=' + code;
+  var text = '💖 Join me on Epoch Love!';
+  var shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
+  try { if (tg && tg.openTelegramLink) tg.openTelegramLink(shareUrl); else window.open(shareUrl); } catch(e){ window.open(shareUrl); }
+}
+function copyReferral(){
+  var code = document.getElementById('refCode').textContent.trim();
+  if (!code || code === '--------'){ toast("Code not loaded"); return; }
+  navigator.clipboard.writeText(code).then(function(){ toast("📋 Copied!"); }).catch(function(){ toast("Copy failed"); });
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ===== CHAT =====
+function openChat(peer){
+  currentPeer = peer; renderedMsgIds = {};
+  document.getElementById('chatPeerName').innerHTML = esc(peer.name) + ', ' + peer.age;
+  document.getElementById('chatPeerAv').innerHTML = peer.photo ? '<img src="' + peer.photo + '" class="chat-peer">' : '<div class="chat-peer-ni">' + esc((peer.name||'?')[0]) + '</div>';
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('chatScreen').classList.add('open');
+  updatePeerStatus();
+  if (peerStatusTimer) clearInterval(peerStatusTimer);
+  peerStatusTimer = setInterval(updatePeerStatus, 15000);
+  loadMessages();
+  // Pre-request mic permission
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+      try { s.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+    }).catch(function(){});
+  }
+}
+function closeChat(){
+  currentPeer = null;
+  if (peerStatusTimer) clearInterval(peerStatusTimer);
+  document.getElementById('chatScreen').classList.remove('open');
+  hideCtxMenu(); hideReactPicker();
+  voiceCancelPreview();
+  if (voiceState.recording) voiceStop();
+}
+function updatePeerStatus(){
+  if (!currentPeer) return;
+  fetch(getApiUrl('/api/online_status/' + currentPeer.id).then(function(r){ return r.json(); }).then(function(d){
+    var el = document.getElementById('chatPeerStatus');
+    if (d.online){ el.textContent = 'Online'; el.className = 'on'; }
+    else if (d.last_seen){
+      var diff = Math.floor(Date.now()/1000 - d.last_seen);
+      if (diff < 60){ el.textContent = 'Just now'; el.className = ''; }
+      else if (diff < 3600){ el.textContent = Math.floor(diff/60) + 'm ago'; el.className = ''; }
+      else if (diff < 86400){ el.textContent = Math.floor(diff/3600) + 'h ago'; el.className = ''; }
+      else { el.textContent = 'Offline'; el.className = ''; }
+    } else { el.textContent = 'Offline'; el.className = ''; }
+  }).catch(function(){});
+}
+function renderMsg(m){
+  var box = document.getElementById('messages');
+  var mine = m.from === userId;
+  var wrap = document.createElement('div');
+  wrap.className = 'msg-wrap ' + (mine ? 'mine' : 'theirs');
+  wrap.dataset.msgId = msgId(m);
+  var div = document.createElement('div');
+  div.className = 'msg ' + (mine ? 'mine' : 'theirs');
+  var t = new Date(m.ts*1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  var html = '';
+  if (m.media_id && m.media_type === 'image'){
+    html += '<div class="media-wrap" data-stop-press="1"><img src="/api/media/' + m.media_id + '" draggable="false" data-media-src="' + m.media_id + '"></div>';
+  } else if (m.media_id && m.media_type === 'video'){
+    html += '<div class="media-wrap" data-stop-press="1"><video src="/api/media/' + m.media_id + '" controls playsinline preload="metadata"></video></div>';
+  } else if (m.media_id && m.media_type === 'voice'){
+    html += '<div class="media-wrap" data-stop-press="1"><audio src="/api/media/' + m.media_id + '" controls preload="metadata" controlsList="nodownload noplaybackrate"></audio></div>';
+  }
+  if (m.text) html += '<span>' + esc(m.text) + '</span>';
+  html += '<span class="t">' + t + '</span>';
+  div.innerHTML = html;
+
+  // Handle taps on media
+  var mediaWrap = div.querySelector('.media-wrap');
+  if (mediaWrap){
+    mediaWrap.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+    var img = mediaWrap.querySelector('img');
+    if (img){
+      img.addEventListener('click', function(e){
+        e.stopPropagation();
+        var now = Date.now();
+        if (now - lastTapTime < 350){ showReactPicker(e, m); lastTapTime = 0; return; }
+        lastTapTime = now;
+        setTimeout(function(){
+          if (Date.now() - lastTapTime >= 350){
+            openMediaLightbox('/api/media/' + img.dataset.mediaSrc);
+          }
+        }, 320);
+      });
+    }
+    var audioEl = mediaWrap.querySelector('audio');
+    if (audioEl){
+      audioEl.setAttribute('controlsList', 'nodownload noplaybackrate');
+      audioEl.setAttribute('oncontextmenu', 'return false;');
+    }
+    var videoEl = mediaWrap.querySelector('video');
+    if (videoEl){
+      videoEl.setAttribute('controlsList', 'nodownload noplaybackrate');
+      videoEl.setAttribute('oncontextmenu', 'return false;');
+    }
+  }
+
+  // Long press on the .msg (not on media) opens context menu
+  var pressTimer = null, longPressed = false;
+  var startPress = function(e){
+    if (e.target.closest && e.target.closest('[data-stop-press]')) return;
+    longPressed = false;
+    pressTimer = setTimeout(function(){
+      longPressed = true;
+      if (navigator.vibrate) navigator.vibrate(30);
+      showCtxMenu(e, m, mine);
+    }, 500);
+  };
+  var cancelPress = function(){ if (pressTimer){ clearTimeout(pressTimer); pressTimer = null; } };
+  var endPress = function(e){
+    cancelPress();
+    if (longPressed) return;
+    if (e.target.closest && e.target.closest('[data-stop-press]')) return;
+    var now = Date.now();
+    if (now - lastTapTime < 350){ showReactPicker(e, m); lastTapTime = 0; }
+    else lastTapTime = now;
+  };
+  div.addEventListener('touchstart', startPress, {passive:true});
+  div.addEventListener('touchend', endPress);
+  div.addEventListener('touchmove', cancelPress, {passive:true});
+  div.addEventListener('mousedown', startPress);
+  div.addEventListener('mouseup', endPress);
+  div.addEventListener('mouseleave', cancelPress);
+
+  wrap.appendChild(div);
+  if (m.reactions && typeof m.reactions === 'object'){
+    var counts = {};
+    for (var uid in m.reactions){
+      if (!m.reactions.hasOwnProperty(uid)) continue;
+      var em = m.reactions[uid];
+      if (em) counts[em] = (counts[em] || 0) + 1;
+    }
+    var hasAny = false;
+    for (var e2 in counts){ if (counts.hasOwnProperty(e2)){ hasAny = true; break; } }
+    if (hasAny){
+      var rb = document.createElement('div'); rb.className = 'msg-reactions';
+      for (var e3 in counts){
+        if (counts.hasOwnProperty(e3)) rb.innerHTML += '<span class="reaction-badge">' + e3 + ' ' + (counts[e3]>1?counts[e3]:'') + '</span>';
+      }
+      wrap.appendChild(rb);
+    }
+  }
+  box.appendChild(wrap);
+}
+function openMediaLightbox(url){
+  var lb = document.createElement('div');
+  lb.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;display:flex;align-items:center;justify-content:center;padding:10px';
+  lb.onclick = function(){ lb.remove(); };
+  lb.oncontextmenu = function(e){ e.preventDefault(); return false; };
+  var img = document.createElement('img');
+  img.src = url;
+  img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;border-radius:14px;pointer-events:none';
+  img.draggable = false;
+  lb.appendChild(img);
+  document.body.appendChild(lb);
+}
+function loadMessages(){
+  if (!currentPeer) return;
+  fetch(getApiUrl('/api/messages/' + userId + '/' + currentPeer.id).then(function(r){ return r.json(); }).then(function(d){
+    var box = document.getElementById('messages');
+    box.innerHTML = ''; renderedMsgIds = {};
+    for (var i = 0; i < d.messages.length; i++){
+      var m = d.messages[i];
+      var id = msgId(m);
+      if (renderedMsgIds[id]) continue;
+      renderedMsgIds[id] = true;
+      renderMsg(m);
+    }
+    requestAnimationFrame(function(){ box.scrollTop = box.scrollHeight; });
+  }).catch(function(){});
+}
+function showCtxMenu(e, msg, mine){
+  var menu = document.getElementById('ctxMenu');
+  menu.innerHTML = '';
+  var rBtn = document.createElement('div'); rBtn.className = 'ctx-item'; rBtn.innerHTML = '<span>😀</span> React';
+  rBtn.onclick = function(){ hideCtxMenu(); setTimeout(function(){ showReactPicker(e, msg); }, 100); };
+  menu.appendChild(rBtn);
+  if (mine){
+    var dMe = document.createElement('div'); dMe.className = 'ctx-item';
+    dMe.innerHTML = '<span>🗑️</span> Delete for me';
+    dMe.onclick = function(){ hideCtxMenu(); deleteMessage(msg, false); };
+    menu.appendChild(dMe);
+    var dAll = document.createElement('div'); dAll.className = 'ctx-item danger';
+    dAll.innerHTML = '<span>🗑️</span> Delete for everyone';
+    dAll.onclick = function(){ hideCtxMenu(); deleteMessage(msg, true); };
+    menu.appendChild(dAll);
+  } else {
+    var repMsg = document.createElement('div'); repMsg.className = 'ctx-item danger';
+    repMsg.innerHTML = '<span>⚠️</span> Report message';
+    repMsg.onclick = function(){ hideCtxMenu(); toast("⚠️ Reported"); };
+    menu.appendChild(repMsg);
+  }
+  menu.classList.add('show');
+  var t = e.touches ? e.touches[0] : e;
+  menu.style.left = Math.min(t.clientX, window.innerWidth - 200) + 'px';
+  menu.style.top = Math.min(t.clientY, window.innerHeight - 200) + 'px';
+}
+function hideCtxMenu(){ document.getElementById('ctxMenu').classList.remove('show'); }
+function deleteMessage(msg, forBoth){
+  fetch(getApiUrl('/api/delete_message', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({from: userId, to: currentPeer.id, ts: msg.ts, for_both: !!forBoth})}).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok){
+      var w = document.querySelector('[data-msg-id="' + msgId(msg) + '"]');
+      if (w) w.remove();
+      toast(forBoth ? "Deleted for everyone" : "Deleted for me");
+    }
+  }).catch(function(){ toast("Delete failed"); });
+}
+var REACTIONS = ['❤️','😂','😮','😢','👍','🔥'];
+function showReactPicker(e, msg){
+  var picker = document.getElementById('reactPicker');
+  picker.innerHTML = '';
+  for (var i = 0; i < REACTIONS.length; i++){
+    (function(r){
+      var span = document.createElement('span'); span.className = 'react-item'; span.textContent = r;
+      span.onclick = function(){ hideReactPicker(); sendMessageReaction(msg, r); };
+      picker.appendChild(span);
+    })(REACTIONS[i]);
+  }
+  picker.classList.add('show');
+  var t = e.touches ? e.changedTouches[0] : e;
+  picker.style.left = Math.min(Math.max(10, t.clientX - 130), window.innerWidth - 270) + 'px';
+  picker.style.top = Math.max(10, t.clientY - 60) + 'px';
+}
+function hideReactPicker(){ document.getElementById('reactPicker').classList.remove('show'); }
+function sendMessageReaction(msg, emoji){
+  fetch(getApiUrl('/api/react_message', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({from: userId, to: currentPeer.id, ts: msg.ts, emoji: emoji})}).then(function(r){ return r.json(); }).then(function(d){ if (d.ok) loadMessages(); }).catch(function(){});
+}
+document.addEventListener('touchstart', function(e){ if (!e.target.closest('#ctxMenu') && !e.target.closest('#reactPicker')){ hideCtxMenu(); hideReactPicker(); } }, {passive:true});
+
+// ===== VOICE RECORDING (press and hold) =====
+var voiceState = { held: false, recording: false, pending: false, stream: null, recorder: null, chunks: [], blob: null, url: null, startedAt: 0 };
+
+function voiceStart(){
+  if (voiceState.recording || voiceState.pending) return;
+  if (!currentPeer){ toast("Open a chat first"); return; }
+  voiceState.pending = true;
+  navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(function(stream){
+    voiceState.pending = false;
+    if (!voiceState.held){
+      try { stream.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+      return;
+    }
+    voiceState.stream = stream;
+    voiceState.chunks = [];
+
+    // Pick best supported mime type
+    var mimes = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus', 'audio/ogg'];
+    var chosenMime = '';
+    for (var i = 0; i < mimes.length; i++){
+      try {
+        if (MediaRecorder.isTypeSupported(mimes[i])){ chosenMime = mimes[i]; break; }
+      } catch(e){}
+    }
+    console.log("[VOICE] mime: " + chosenMime);
+
+    try {
+      voiceState.recorder = chosenMime
+        ? new MediaRecorder(stream, {mimeType: chosenMime})
+        : new MediaRecorder(stream);
+    } catch(err){
+      try { stream.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+      toast("Recorder error");
+      return;
+    }
+
+    voiceState.recorder.ondataavailable = function(ev){
+      console.log("[VOICE] data: " + (ev.data ? ev.data.size : 0) + " bytes");
+      if (ev.data && ev.data.size > 0) voiceState.chunks.push(ev.data);
+    };
+    voiceState.recorder.onerror = function(e){ console.log("[VOICE] error"); };
+    voiceState.recorder.onstop = voiceOnStop;
+    voiceState.recorder.start();  // NO timeslice - collect on stop
+    voiceState.recording = true;
+    voiceState.startedAt = Date.now();
+    var btn = document.getElementById('voiceBtn');
+    if (btn) btn.classList.add('rec');
+    if (navigator.vibrate) navigator.vibrate(30);
+    console.log("[VOICE] started");
+  }).catch(function(err){
+    voiceState.pending = false;
+    voiceState.held = false;
+    console.log("[VOICE] error: " + err);
+    toast("Mic denied");
+  });
+}
+function voiceStop(){
+  if (!voiceState.recording) return;
+  var elapsed = Date.now() - voiceState.startedAt;
+  // Ensure minimum 800ms so we actually capture audio
+  if (elapsed < 800){
+    setTimeout(function(){ voiceDoStop(); }, 800 - elapsed);
+  } else {
+    voiceDoStop();
+  }
+}
+
+function voiceDoStop(){
+  if (!voiceState.recording) return;
+  try {
+    if (voiceState.recorder.state === 'recording'){
+      try { voiceState.recorder.requestData(); } catch(e){}
+    }
+    setTimeout(function(){
+      try { voiceState.recorder.stop(); } catch(e){ voiceState.recording = false; }
+    }, 150);
+  } catch(e){ voiceState.recording = false; }
+}
+function voiceOnStop(){
+  try { voiceState.stream.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+  voiceState.stream = null;
+  voiceState.recording = false;
+  var btn = document.getElementById('voiceBtn');
+  if (btn) btn.classList.remove('rec');
+  var elapsed = Date.now() - voiceState.startedAt;
+  // Wait a moment for the final data chunk
+  setTimeout(function(){
+    var chunks = voiceState.chunks;
+    voiceState.chunks = [];
+    var totalSize = 0;
+    for (var i = 0; i < chunks.length; i++) totalSize += chunks[i].size;
+    console.log("[VOICE] done: " + elapsed + "ms, " + chunks.length + " chunks, " + totalSize + " bytes");
+    if (totalSize < 500){ toast("Recording failed - hold longer"); return; }
+    var blob = new Blob(chunks, {type: 'audio/webm'});
+    voiceState.blob = blob;
+    voiceState.url = URL.createObjectURL(blob);
+    voiceShowPreview();
+  }, 300);
+}
+function voiceShowPreview(){
+  voiceCancelPreview();
+  var chat = document.getElementById('chatScreen');
+  if (!chat) return;
+  var bar = document.createElement('div');
+  bar.id = 'voicePreviewBar';
+  bar.style.cssText = 'position:absolute;left:10px;right:10px;bottom:70px;background:rgba(20,15,35,.98);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:10px 12px;display:flex;gap:8px;align-items:center;z-index:300;box-shadow:0 10px 40px rgba(0,0,0,.6)';
+  var del = document.createElement('button');
+  del.textContent = '🗑️';
+  del.style.cssText = 'width:42px;height:42px;border-radius:50%;background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);color:#ef4444;font-size:20px;cursor:pointer;flex-shrink:0';
+  del.onclick = voiceCancelPreview;
+  var audio = document.createElement('audio');
+  audio.src = voiceState.url;
+  audio.controls = true;
+  audio.style.cssText = 'flex:1;min-width:0;height:40px';
+  audio.setAttribute('controlsList', 'nodownload noplaybackrate');
+  audio.setAttribute('oncontextmenu', 'return false;');
+  var send = document.createElement('button');
+  send.textContent = '➤';
+  send.style.cssText = 'width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff2d78,#a855f7);border:none;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0';
+  send.onclick = voiceSend;
+  bar.appendChild(del); bar.appendChild(audio); bar.appendChild(send);
+  chat.appendChild(bar);
+}
+function voiceCancelPreview(){
+  if (voiceState.url){ try { URL.revokeObjectURL(voiceState.url); } catch(e){} voiceState.url = null; }
+  voiceState.blob = null;
+  var b = document.getElementById('voicePreviewBar');
+  if (b) b.remove();
+}
+function voiceSend(){
+  if (!voiceState.blob || !currentPeer || !ws){ toast("Not ready"); return; }
+  var form = new FormData();
+  form.append('file', voiceState.blob, 'voice.webm');
+  form.append('from', userId);
+  form.append('to', currentPeer.id);
+  form.append('media_type', 'voice');
+  voiceCancelPreview();
+  fetch(getApiUrl('/api/upload_media', {method:'POST', body: form}).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok) ws.send(JSON.stringify({type:'SEND', to: currentPeer.id, text:'', media_id: d.media_id, media_type: 'voice'}));
+    else toast("Upload failed");
+  }).catch(function(){ toast("Upload error"); });
+}
+
+// Attach voice button
+function voiceAttach(){
+  var btn = document.getElementById('voiceBtn');
+  if (!btn){ setTimeout(voiceAttach, 500); return; }
+  if (btn._voiceAttached) return;
+  btn._voiceAttached = true;
+
+  var down = function(e){ if (e && e.preventDefault) e.preventDefault(); if (voiceState.held) return; voiceState.held = true; voiceStart(); };
+  var up = function(e){ if (e && e.preventDefault) e.preventDefault(); if (!voiceState.held && !voiceState.recording) return; voiceState.held = false; voiceStop(); };
+
+  if (window.PointerEvent){
+    btn.addEventListener('pointerdown', down, {passive:false});
+    document.addEventListener('pointerup', function(e){
+      if (voiceState.held || voiceState.recording) up(e);
+    });
+    document.addEventListener('pointercancel', function(e){
+      if (voiceState.held || voiceState.recording) up(e);
+    });
+  } else {
+    btn.addEventListener('touchstart', down, {passive:false});
+    btn.addEventListener('mousedown', down);
+    document.addEventListener('touchend', up);
+    document.addEventListener('mouseup', up);
+  }
+}
+voiceAttach();
+
+// ===== WEBSOCKET =====
+function connectWS(){
+  var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  try { ws = new WebSocket(getWsUrl()); } catch(e){ return; }
+  ws.onopen = function(){
+    ws.send(JSON.stringify({type:'AUTH', user_id: userId}));
+    if (pingTimer) clearInterval(pingTimer);
+    pingTimer = setInterval(function(){ if (ws && ws.readyState===1) ws.send(JSON.stringify({type:'PING'})); }, 20000);
+  };
+  ws.onmessage = function(ev){
+    var d = JSON.parse(ev.data);
+    if (d.type === 'NEW_MESSAGE'){
+      var m = d.msg;
+      if (currentPeer && m.from === currentPeer.id){
+        var id = msgId(m);
+        if (!renderedMsgIds[id]){ renderedMsgIds[id] = true; renderMsg(m); var box = document.getElementById('messages'); requestAnimationFrame(function(){ box.scrollTop = box.scrollHeight; }); }
+      }
+    } else if (d.type === 'MSG_SENT'){
+      var m2 = d.msg; var id2 = msgId(m2);
+      if (!renderedMsgIds[id2]){ renderedMsgIds[id2] = true; renderMsg(m2); var box2 = document.getElementById('messages'); requestAnimationFrame(function(){ box2.scrollTop = box2.scrollHeight; }); }
+    } else if (d.type === 'NEW_MATCH'){
+      showCelebrate(d.peer_name || 'Someone');
+    } else if (d.type === 'MSG_DELETED'){
+      var w = document.querySelector('[data-msg-id="' + d.msg_id + '"]'); if (w) w.remove();
+    } else if (d.type === 'MSG_REACTION'){ loadMessages(); }
+  };
+  ws.onclose = function(){ setTimeout(connectWS, 2000); };
+}
+function showCelebrate(name){
+  document.getElementById('celebrateText').textContent = name + ' liked you back!';
+  document.getElementById('celebrate').classList.add('show');
+  if (navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
+}
+function closeCelebrate(){ document.getElementById('celebrate').classList.remove('show'); switchPage('matches'); }
+function sendText(){
+  var inp = document.getElementById('msgInput'); var t = inp.value.trim();
+  if (!t || !currentPeer || !ws) return;
+  if (containsLink(t)){ toast("🚫 Links and ads are not allowed"); return; }
+  inp.value = '';
+  ws.send(JSON.stringify({type:'SEND', to: currentPeer.id, text: t}));
+}
+function uploadFile(evt){
+  var file = evt.target.files[0]; if (!file || !currentPeer) return; evt.target.value = '';
+  var mediaType = file.type.indexOf('video/') === 0 ? 'video' : 'image';
+  var doUpload = function(f){
+    var form = new FormData();
+    form.append('file', f); form.append('from', userId); form.append('to', currentPeer.id); form.append('media_type', mediaType);
+    fetch(getApiUrl('/api/upload_media', {method:'POST', body: form}).then(function(r){ return r.json(); }).then(function(d){
+      if (d.ok) ws.send(JSON.stringify({type:'SEND', to: currentPeer.id, text:'', media_id: d.media_id, media_type: d.media_type}));
+    }).catch(function(){ toast("Upload error"); });
+  };
+  if (mediaType === 'image'){ compressImage(file, 1200, 0.75).then(doUpload).catch(function(){ doUpload(file); }); }
+  else doUpload(file);
+}
+
+// ===== BOOT =====
+userId = getUserId();
+initRegAgeGrid();
+initOptGrid('genderGrid', 'gender');
+initOptGrid('lookGrid', 'looking_for');
+
+if (!userId){
+  document.getElementById('splash').innerHTML = '<div style="color:#fff;text-align:center;padding:40px"><div style="font-size:48px">❌</div><div style="margin-top:20px">Please open from Telegram</div></div>';
+} else {
+  var refCode = getStartParam();
+  fetch(getApiUrl('/api/register/start', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: userId, first_name: getFirstName(), ref_code: refCode})}).then(function(r){ return r.json(); }).then(function(d){
+    userProfile = d.profile; updateUserUI();
+    setTimeout(function(){
+      document.getElementById('splash').classList.add('hide');
+      if (!userProfile.signup_complete){
+        showRegStep(0); document.getElementById('regScreen').classList.add('open');
+      } else {
+        document.getElementById('app').style.display = 'flex';
+        connectWS(); loadDiscover();
+      }
+    }, 1200);
+  }).catch(function(e){
+    document.getElementById('splash').innerHTML = '<div style="color:#fff;text-align:center;padding:40px"><div style="font-size:48px">⚠️</div><div style="margin-top:20px">Connection error</div></div>';
+  });
+}
+</script>
+</body>
+</html>
