@@ -11,7 +11,7 @@
         p { color: #888; letter-spacing: 2px; margin-top: 10px; font-size: 14px; }
         button { background: linear-gradient(135deg, #ff3b7a, #7b2cbf); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 18px; margin-top: 40px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 59, 122, 0.4); }
         button:active { transform: scale(0.95); }
-        #message { margin-top: 30px; font-size: 18px; font-weight: bold; color: #ffd700; min-height: 30px; }
+        #message { margin-top: 30px; font-size: 18px; font-weight: bold; color: #ffd700; min-height: 30px; padding: 0 20px; }
     </style>
 </head>
 <body>
@@ -21,17 +21,38 @@
     <button onclick="findLove()">Find My Match</button>
     <div id="message"></div>
 
+    <!-- ۱. اضافه کردن کتابخانه Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const messages = [
-            "Your soulmate is thinking of you right now! ✨",
-            "A beautiful connection is just around the corner. 💖",
-            "Be patient, true love takes time. 🌹",
-            "Your heart is ready for a new adventure. 💫",
-            "Someone special is waiting to meet you. 💌"
-        ];
-        function findLove() {
-            const randomIndex = Math.floor(Math.random() * messages.length);
-            document.getElementById('message').innerText = messages[randomIndex];
+        // ۲. مقداردهی اولیه کلاینت Supabase
+        // ⚠️ مقادیر زیر را با اطلاعات پروژه خودتان جایگزین کنید
+        const supabaseUrl = 'jngccckefdklrxgdloar';
+        const supabaseKey = 'sb_publishable_roFEhbqzHWsTG2l4Wbp_wA_tZdGU_xZ';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // ۳. تابعی برای خواندن پیام از دیتابیس
+        async function findLove() {
+            const messageElement = document.getElementById('message');
+            messageElement.innerText = '...'; // نمایش حالت بارگذاری
+
+            // خواندن تمام پیام‌ها از جدول messages
+            let { data: messages, error } = await supabase
+                .from('messages')
+                .select('content');
+
+            if (error) {
+                console.error('Error fetching message:', error);
+                messageElement.innerText = 'Could not connect. Please try again.';
+                return;
+            }
+
+            if (messages && messages.length > 0) {
+                // انتخاب یک پیام تصادفی از بین پیام‌های موجود
+                const randomIndex = Math.floor(Math.random() * messages.length);
+                messageElement.innerText = messages[randomIndex].content;
+            } else {
+                messageElement.innerText = 'No messages found yet.';
+            }
         }
     </script>
 </body>
