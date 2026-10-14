@@ -1565,6 +1565,16 @@ if (!userId){
     document.getElementById('splash').innerHTML = '<div style="color:#fff;text-align:center;padding:40px"><div style="font-size:48px">⚠️</div><div style="margin-top:20px">Connection error</div></div>';
   });
 }
+  // ==== این کد رو برای باز شدن اپ اضافه کردیم ====
+setTimeout(function() {
+    // مخفی کردن صفحه لودینگ
+    var splash = document.getElementById('splash') || document.querySelector('.splash') || document.querySelector('.loading');
+    if (splash) { splash.style.display = 'none'; }
+    
+    // نمایش صفحه اصلی (اگه صفحه اصلی آیدی داره)
+    var mainApp = document.getElementById('app') || document.querySelector('.main-app') || document.body;
+    if (mainApp) { mainApp.style.display = 'block'; }
+}, 3000); // بعد از ۳ ثانیه
 </script>
 </body>
 </html>
