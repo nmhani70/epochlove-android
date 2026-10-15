@@ -2,122 +2,465 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Epoch Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6A0DAD; --secondary: #FF3B7A; --bg-light: #F8F9FA; --white: #FFFFFF; --text-dark: #1A1A1A; --text-gray: #6C757D; --shadow: 0 4px 15px rgba(0,0,0,0.08); --radius: 20px; }
+        :root {
+            --primary: #6A0DAD; /* Badoo Purple */
+            --secondary: #FF3B7A; /* Pink */
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-gray: #6C757D;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --radius: 20px;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-light); color: var(--text-dark); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-        #app { flex: 1; overflow-y: auto; padding-bottom: 80px; display: block; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: var(--white); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 20px; border-top-right-radius: 20px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 11px; font-weight: 500; cursor: pointer; width: 20%; height: 100%; transition: 0.2s; }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
-        .header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; background: var(--white); }
+        
+        body { 
+            background-color: var(--bg-light); 
+            color: var(--text-dark); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            padding-top: env(safe-area-inset-top, 20px); 
+            padding-bottom: env(safe-area-inset-bottom, 10px); 
+            overflow: hidden;
+        }
+
+        /* --- Screens --- */
+        .screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .screen.active { display: block; }
+
+        /* --- Discover Screen --- */
+        .header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 28px; font-weight: 700; }
+        .header-icons { display: flex; gap: 15px; }
+        .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 18px;}
+        
         .suggested-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
         .horizontal-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 20px; scroll-snap-type: x mandatory; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
+        
         .card-large { min-width: 280px; height: 400px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); }
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
-        .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
+        .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
         .card-large .name { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .verified-badge { width: 18px; height: 18px; background: #1DA1F2; border-radius: 50%; display: inline-block; position: relative;}
+        .verified-badge::after { content: '✓'; color: white; font-size: 12px; position: absolute; left: 4px; top: -1px;}
         .card-large .location { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .tag { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; font-size: 12px; backdrop-filter: blur(5px); }
+        
         .grid-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
         .card-small { border-radius: 15px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; }
         .card-small img { width: 100%; height: 100%; object-fit: cover; }
-        .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: white; }
+        .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
         .card-small .name { font-size: 14px; font-weight: 600; }
         .status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
         .status.online { background: #4CAF50; }
+
+        /* --- Encounters Screen --- */
+        .encounter-container { padding: 20px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .encounter-card { width: 100%; height: 70vh; border-radius: var(--radius); position: relative; overflow: hidden; box-shadow: var(--shadow); background: #e0e0e0;}
+        .encounter-card img { width: 100%; height: 100%; object-fit: cover; }
+        .encounter-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
+        .encounter-info .name { font-size: 28px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .encounter-info .detail { font-size: 14px; margin-top: 5px; opacity: 0.9;}
+        .encounter-actions { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
+        .btn-action { width: 70px; height: 70px; border-radius: 50%; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-action:active { transform: scale(0.9); }
+        .btn-pass { color: #FF3B3B; }
+        .btn-like { color: var(--secondary); }
+
+        /* --- Likes Screen --- */
+        .likes-header { padding: 20px; }
+        .likes-header h2 { font-size: 24px; margin-bottom: 10px;}
+        .likes-header p { font-size: 14px; color: var(--text-gray); }
+        .likes-tabs { display: flex; padding: 0 20px; gap: 20px; border-bottom: 1px solid #eee; margin-bottom: 20px;}
+        .likes-tab { padding: 10px 0; font-weight: 600; color: var(--text-gray); cursor: pointer; border-bottom: 2px solid transparent; }
+        .likes-tab.active { color: var(--text-dark); border-bottom: 2px solid var(--text-dark); }
+        .likes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .blur-img { filter: blur(15px); }
+        .paywall-card { grid-column: span 2; background: white; border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow); border: 1px solid #eee; margin-top: 10px;}
+        .paywall-card h3 { font-size: 18px; margin-bottom: 10px; }
+        .paywall-card p { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
+        .paywall-btn { background: var(--text-dark); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; }
+
+        /* --- Chats Screen --- */
+        .chats-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .chats-header h2 { font-size: 24px; }
+        .stories { display: flex; gap: 15px; padding: 0 20px 20px; overflow-x: auto; }
+        .story { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .story-circle { width: 70px; height: 70px; border-radius: 50%; background: #eee; border: 2px solid var(--primary); padding: 2px; position: relative; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .story-badge { position: absolute; bottom: 0; right: 0; background: var(--secondary); color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;}
+        .story-name { font-size: 12px; color: var(--text-gray); }
+        
+        .messages-list { padding: 0 20px; }
+        .msg-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .msg-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        .msg-content { flex: 1; }
+        .msg-name { font-weight: 600; font-size: 16px; display: flex; justify-content: space-between;}
+        .msg-text { font-size: 14px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; margin-top: 3px; }
+
+        /* --- Profile Screen --- */
+        .profile-header { padding: 20px; display: flex; align-items: center; gap: 20px; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: var(--shadow); }
+        .profile-info h2 { font-size: 24px; }
+        .profile-badge { background: #F0F0F0; padding: 5px 12px; border-radius: 15px; font-size: 12px; display: inline-block; margin-top: 5px;}
+        
+        .profile-stats { display: flex; gap: 15px; padding: 0 20px 20px; }
+        .stat-box { background: white; border-radius: 15px; padding: 15px; flex: 1; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
+        .stat-box .icon { font-size: 24px; }
+        .stat-box .data { display: flex; flex-direction: column; }
+        .stat-box .value { font-weight: 700; font-size: 18px; }
+        .stat-box .label { font-size: 12px; color: var(--text-gray); }
+        
+        .premium-banner { background: #4A0033; color: white; margin: 0 20px 20px; border-radius: var(--radius); padding: 20px; text-align: center; position: relative; overflow: hidden;}
+        .premium-banner h3 { color: #FFB6C1; font-size: 20px; margin-bottom: 10px; }
+        .premium-banner p { font-size: 14px; margin-bottom: 15px; }
+        .premium-btn { background: white; color: #4A0033; border: none; padding: 12px 25px; border-radius: 25px; font-weight: 700; font-size: 14px; width: 100%; cursor: pointer;}
+        
+        .settings-list { padding: 0 20px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 15px; margin-bottom: 10px; box-shadow: var(--shadow); }
+        .setting-item .left { display: flex; align-items: center; gap: 10px; font-weight: 500;}
+        .setting-item .left span { font-size: 20px; }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: var(--white); display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; 
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            padding-bottom: env(safe-area-inset-bottom, 10px); 
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 11px; font-weight: 500; cursor: pointer; width: 20%; height: 100%; transition: 0.2s; }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+        
+        /* Utilities */
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="app">
-        <div id="discover-screen">
-            <div class="header"><h1>Discover</h1></div>
-            <div class="suggested-title">Suggested for you today</div>
-            <div id="suggested-container" class="horizontal-scroll"></div>
-            <div class="grid-title">Everyone</div>
-            <div id="everyone-container" class="grid-container"></div>
+    <!-- ================= SCREEN 1: DISCOVER ================= -->
+    <div id="discover-screen" class="screen active">
+        <div class="header">
+            <h1>Discover</h1>
+            <div class="header-icons">
+                <div class="icon-btn">⚡</div>
+                <div class="icon-btn">⚙️</div>
+            </div>
+        </div>
+        <div class="suggested-title">Suggested for you today</div>
+        <div id="suggested-container" class="horizontal-scroll"></div>
+        <div class="grid-title">Everyone</div>
+        <div id="everyone-container" class="grid-container"></div>
+    </div>
+
+    <!-- ================= SCREEN 2: ENCOUNTERS (SWIPE) ================= -->
+    <div id="encounters-screen" class="screen">
+        <div class="header"><h1>Encounters</h1></div>
+        <div class="encounter-container">
+            <div class="encounter-card" id="encounter-card">
+                <img id="encounter-img" src="" alt="Profile">
+                <div class="encounter-info">
+                    <div class="name" id="encounter-name">Loading...</div>
+                    <div class="detail" id="encounter-location"></div>
+                </div>
+            </div>
+            <div class="encounter-actions">
+                <button class="btn-action btn-pass" onclick="swipe('pass')">✕</button>
+                <button class="btn-action btn-like" onclick="swipe('like')">❤️</button>
+            </div>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>Discover</div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Encounters</div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Likes</div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Chats</div>
-        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Profile</div>
+    <!-- ================= SCREEN 3: LIKES ================= -->
+    <div id="likes-screen" class="screen">
+        <div class="likes-header">
+            <h2>Your likes list</h2>
+            <p>The faster you like them back, the higher your chance of chatting and dating!</p>
+        </div>
+        <div class="likes-tabs">
+            <div class="likes-tab active">All likes 🔒</div>
+            <div class="likes-tab">New likes 🔒</div>
+            <div class="likes-tab">Online 🔒</div>
+        </div>
+        <div class="likes-grid" id="likes-container">
+            <!-- Populated by JS -->
+        </div>
+        <div style="padding: 20px;">
+            <button class="paywall-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Reveal My Likes</button>
+        </div>
     </div>
 
-    <!-- ۱. کتابخانه Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // ⚠️⚠️ این دو خط را با اطلاعات پروژه خودت جایگزین کن ⚠️⚠️
-        const supabaseUrl = 'آدرس_پروژه_خودت_را_اینجا_بگذار';
-        const supabaseKey = 'کلید_Publishable_خودت_را_اینجا_بگذار';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <!-- ================= SCREEN 4: CHATS ================= -->
+    <div id="chats-screen" class="screen">
+        <div class="chats-header">
+            <h2>Chats</h2>
+            <div>🔔</div>
+        </div>
+        <div style="padding: 0 20px 10px; font-weight: 600; font-size: 14px;">Likes and matches</div>
+        <div class="stories">
+            <div class="story">
+                <div class="story-circle">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80">
+                    <div class="story-badge">1</div>
+                </div>
+                <span class="story-name">Likes</span>
+            </div>
+        </div>
+        <div style="padding: 0 20px 10px; font-weight: 600; font-size: 14px;">Messages</div>
+        <div class="messages-list" id="chats-container">
+            <!-- Populated by JS -->
+        </div>
+    </div>
 
-        // تابع برای دریافت و نمایش پروفایل‌ها
-        async function loadProfiles() {
+    <!-- ================= SCREEN 5: PROFILE ================= -->
+    <div id="profile-screen" class="screen">
+        <div class="header"><h1>Profile</h1></div>
+        <div class="profile-header">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" class="profile-avatar">
+            <div class="profile-info">
+                <h2>Hani, 29</h2>
+                <div class="profile-badge">❤️ Ready for a relationship</div>
+            </div>
+        </div>
+        
+        <div class="profile-stats">
+            <div class="stat-box">
+                <div class="icon">📊</div>
+                <div class="data">
+                    <span class="value">Low</span>
+                    <span class="label">Activity</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="icon">💎</div>
+                <div class="data">
+                    <span class="value">30</span>
+                    <span class="label">Credits</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="premium-banner">
+            <h3>Badoo Extra</h3>
+            <p>Get seen by 4x more people, unlock unlimited swipes, and remove ads.</p>
+            <button class="premium-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Get Extra (from 5.99 €)</button>
+        </div>
+
+        <div class="settings-list">
+            <div class="setting-item">
+                <div class="left"><span>👻</span> Turn on invisible mode</div>
+                <div>›</div>
+            </div>
+            <div class="setting-item">
+                <div class="left"><span>🛡️</span> Manage your privacy</div>
+                <div>›</div>
+            </div>
+            <div class="setting-item">
+                <div class="left"><span>📖</span> Community Guidelines</div>
+                <div>›</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BOTTOM NAVIGATION ================= -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('discover', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Discover
+        </div>
+        <div class="nav-item" onclick="switchTab('encounters', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Encounters
+        </div>
+        <div class="nav-item" onclick="switchTab('likes', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Likes
+        </div>
+        <div class="nav-item" onclick="switchTab('chats', this)">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            Chats
+        </div>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Profile
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // داده‌های تستی (Mock Data) - اگر Supabase وصل نشد، اپ با اینها کار می‌کند
+        const mockProfiles = [
+            { id: 1, name: "Guadalupe", age: 27, location: "Dubai", is_online: true, tags: ["Documentaries", "Takeaways", "Eating out"], image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, name: "Ren", age: 24, location: "Dubai", is_online: true, tags: ["Wine", "Travel"], image_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, name: "Sonia", age: 32, location: "Paris", is_online: false, tags: ["Art", "Music"], image_url: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, name: "Marg", age: 27, location: "London", is_online: true, tags: ["Music", "Travel"], image_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80" },
+            { id: 5, name: "Emily", age: 28, location: "Berlin", is_online: true, tags: ["Reading"], image_url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80" },
+            { id: 6, name: "Tella", age: 30, location: "Rome", is_online: false, tags: ["Cooking"], image_url: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        // داده‌های تستی برای چت
+        const mockChats = [
+            { name: "Lisa", text: "Lisa where are you from", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=150&q=80" },
+            { name: "Nancy", text: "This is the bot's ID", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" },
+            { name: "Miral", text: "Hi", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80" }
+        ];
+
+        let currentEncounterIndex = 0;
+        let currentProfiles = [...mockProfiles];
+
+        // --- Tab Switching Logic ---
+        function switchTab(tabName, element) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            // Show selected screen
+            document.getElementById(tabName + '-screen').classList.add('active');
+            
+            // Update Nav Bar
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Special actions when opening a tab
+            if (tabName === 'encounters') loadEncounter();
+            if (tabName === 'chats') renderChats();
+        }
+
+        // --- Render Discover Screen ---
+        function renderDiscover(profiles) {
             const suggestedContainer = document.getElementById('suggested-container');
             const everyoneContainer = document.getElementById('everyone-container');
-
-            // دریافت اطلاعات از Supabase
-            let { data: profiles, error } = await supabase.from('profiles').select('*');
-
-            if (error) {
-                console.error('Error fetching profiles:', error);
-                suggestedContainer.innerHTML = '<p>خطا در اتصال به سرور</p>';
-                return;
-            }
-
-            if (profiles.length === 0) {
-                suggestedContainer.innerHTML = '<p>هیچ کاربری یافت نشد</p>';
-                return;
-            }
-
-            // پاک کردن محتوای قبلی
+            
             suggestedContainer.innerHTML = '';
             everyoneContainer.innerHTML = '';
 
-            // ۳ کارت اول برای بخش Suggested
             profiles.slice(0, 2).forEach(profile => {
                 const tagsHtml = (profile.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
                 suggestedContainer.innerHTML += `
                     <div class="card-large">
-                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
+                        <img src="${profile.image_url}" alt="${profile.name}">
                         <div class="overlay">
-                            <div class="name">${profile.name}, ${profile.age || ''}</div>
-                            <div class="location">${profile.location || 'Unknown'}</div>
+                            <div class="name">${profile.name}, ${profile.age} <span class="verified-badge"></span></div>
+                            <div class="location">${profile.location}</div>
                             <div class="tags">${tagsHtml}</div>
                         </div>
                     </div>
                 `;
             });
 
-            // بقیه برای بخش Everyone
             profiles.slice(2).forEach(profile => {
                 const onlineBadge = profile.is_online ? '<span class="status online"></span>' : '';
                 everyoneContainer.innerHTML += `
                     <div class="card-small">
-                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
+                        <img src="${profile.image_url}" alt="${profile.name}">
                         <div class="info">
-                            <div class="name">${profile.name}, ${profile.age || ''} ${onlineBadge}</div>
+                            <div class="name">${profile.name}, ${profile.age} ${onlineBadge}</div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // اجرای تابع هنگام باز شدن اپ
-        loadProfiles();
+        // --- Render Encounters Screen ---
+        function loadEncounter() {
+            if (currentEncounterIndex >= currentProfiles.length) {
+                currentEncounterIndex = 0; // Loop back
+            }
+            const profile = currentProfiles[currentEncounterIndex];
+            if (!profile) return;
+
+            document.getElementById('encounter-img').src = profile.image_url;
+            document.getElementById('encounter-name').innerHTML = `${profile.name}, ${profile.age} <span class="verified-badge"></span>`;
+            document.getElementById('encounter-location').innerText = profile.location;
+        }
+
+        function swipe(action) {
+            // انیمیشن ساده
+            const card = document.getElementById('encounter-card');
+            if (action === 'like') {
+                card.style.transform = 'translateX(100px) rotate(10deg)';
+                card.style.opacity = '0';
+            } else {
+                card.style.transform = 'translateX(-100px) rotate(-10deg)';
+                card.style.opacity = '0';
+            }
+
+            setTimeout(() => {
+                card.style.transform = 'none';
+                card.style.opacity = '1';
+                currentEncounterIndex++;
+                loadEncounter();
+            }, 300);
+        }
+
+        // --- Render Likes Screen ---
+        function renderLikes() {
+            const container = document.getElementById('likes-container');
+            container.innerHTML = '';
+            
+            // 4 blurred cards to simulate locked likes
+            currentProfiles.slice(0, 4).forEach(profile => {
+                container.innerHTML += `
+                    <div class="card-small">
+                        <img src="${profile.image_url}" class="blur-img">
+                        <div class="info" style="text-align: center;">
+                            <div class="name" style="font-size: 20px;">?</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- Render Chats Screen ---
+        function renderChats() {
+            const container = document.getElementById('chats-container');
+            container.innerHTML = '';
+            
+            mockChats.forEach(chat => {
+                container.innerHTML += `
+                    <div class="msg-item">
+                        <img src="${chat.img}" class="msg-avatar">
+                        <div class="msg-content">
+                            <div class="msg-name">${chat.name} <span style="color: #ddd;">☆</span></div>
+                            <div class="msg-text">${chat.text}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- Initialize App ---
+        function initApp() {
+            // Render based on mock data immediately so UI is not empty
+            renderDiscover(mockProfiles);
+            renderLikes();
+            
+            // Try to fetch from Supabase if available
+            // (If you set up Supabase correctly, uncomment the lines below in the future)
+            /*
+            const supabaseUrl = 'YOUR_SUPABASE_URL';
+            const supabaseKey = 'YOUR_SUPABASE_KEY';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            
+            supabase.from('profiles').select('*').then(({data, error}) => {
+                if (!error && data.length > 0) {
+                    currentProfiles = data;
+                    renderDiscover(data);
+                }
+            });
+            */
+        }
+
+        // Run
+        initApp();
     </script>
 </body>
 </html>
