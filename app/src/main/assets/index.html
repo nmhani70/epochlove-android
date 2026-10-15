@@ -19,8 +19,8 @@
 
         /* --- Discover --- */
         .header { padding: 15px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px;}
-        .debug-badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; background: #eee; color: #555; font-weight: normal;}
+        .header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px;}
+        .debug-badge { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: #eee; color: #555; font-weight: normal;}
         .debug-badge.ok { background: #E8F5E9; color: #2E7D32; }
         .debug-badge.err { background: #FFEBEE; color: #C62828; }
         .header-icons { display: flex; gap: 12px; }
@@ -32,7 +32,7 @@
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
         .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
         .card-large .name { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-        .verified-badge { width: 16px; height: 16px; background: #1DA1F2; border-radius: 50%; display: inline-block; position: relative;}
+        .verified-badge { width: 16px; height: 16px; background: #1DA1F2; border-radius: 50%; display: inline-block; position: relative; flex-shrink: 0;}
         .verified-badge::after { content: '✓'; color: white; font-size: 10px; position: absolute; left: 4px; top: -1px;}
         .card-large .location { font-size: 12px; opacity: 0.9; margin-bottom: 8px; }
         .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
@@ -263,7 +263,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ⚠️⚠️ اطلاعات اتصال Supabase شما (با کلید anon اصلی) ⚠️⚠️
+        // ⚠️⚠️ اطلاعات اتصال Supabase شما (کلید anon اصلی) ⚠️⚠️
         const supabaseUrl = 'https://jngcckefdklrxgdloar.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpuZ2NjY2tlZmRrbHJ4Z2Rsb2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NjA4OTUsImV4cCI6MjEwNzUzNjg5NX0.HP283tvI864yj6ZyXrfaBM428M7eTn-4sPAkMPB13fk';
 
@@ -272,7 +272,7 @@
             supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
         } catch(e) { console.error("Supabase init failed:", e); }
 
-        // داده‌های تستی (با پیشوند Mock مشخص شدن تا با داده‌های واقعی اشتباه نشوند)
+        // داده‌های تستی (با پیشوند Mock)
         const mockProfiles = [
             { id: 1, name: "Mock Guadalupe", age: 27, location: "Dubai", is_online: true, tags: ["Documentaries", "Takeaways", "Eating out"], image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" },
             { id: 2, name: "Mock Ren", age: 24, location: "Dubai", is_online: true, tags: ["Wine", "Travel"], image_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" },
@@ -320,18 +320,18 @@
                 const { data, error } = await supabaseClient.from('profiles').select('*');
                 if (error) {
                     console.error("Supabase error:", error.message);
-                    sourceBadge.innerText = 'Connection Error';
+                    sourceBadge.innerText = 'Error: ' + error.message.substring(0, 20);
                     sourceBadge.className = 'debug-badge err';
                     return;
                 }
                 if (data && data.length > 0) {
                     currentProfiles = data;
                     renderDiscover(data);
-                    sourceBadge.innerText = 'Connected to Supabase';
+                    sourceBadge.innerText = 'Connected ✓';
                     sourceBadge.className = 'debug-badge ok';
                     console.log("Loaded from Supabase:", data.length, "profiles");
                 } else {
-                    sourceBadge.innerText = 'Supabase Empty';
+                    sourceBadge.innerText = 'Table Empty';
                     sourceBadge.className = 'debug-badge err';
                     renderDiscover(mockProfiles);
                 }
