@@ -37,15 +37,15 @@
 
         /* --- Discover Screen --- */
         .header { padding: 15px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 24px; font-weight: 700; } /* کوچیک‌تر شد */
+        .header h1 { font-size: 24px; font-weight: 700; } 
         .header-icons { display: flex; gap: 12px; }
-        .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 16px;}
+        .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;}
         
         .suggested-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
         .horizontal-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px 15px; scroll-snap-type: x mandatory; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
         
-        .card-large { min-width: 250px; height: 350px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); }
+        .card-large { min-width: 250px; height: 350px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); cursor: pointer; }
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
         .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
         .card-large .name { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
@@ -57,7 +57,7 @@
         
         .grid-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px 20px; }
-        .card-small { border-radius: 12px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; }
+        .card-small { border-radius: 12px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; cursor: pointer; }
         .card-small img { width: 100%; height: 100%; object-fit: cover; }
         .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 8px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
         .card-small .name { font-size: 12px; font-weight: 600; }
@@ -92,25 +92,25 @@
         .chats-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .chats-header h2 { font-size: 20px; }
         .stories { display: flex; gap: 12px; padding: 0 15px 15px; overflow-x: auto; }
-        .story { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .story { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;}
         .story-circle { width: 60px; height: 60px; border-radius: 50%; background: #eee; border: 2px solid var(--primary); padding: 2px; position: relative; }
         .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .story-badge { position: absolute; bottom: 0; right: 0; background: var(--secondary); color: white; font-size: 9px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;}
         .story-name { font-size: 11px; color: var(--text-gray); }
         .messages-list { padding: 0 15px; }
-        .msg-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .msg-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;}
         .msg-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
         .msg-content { flex: 1; }
         .msg-name { font-weight: 600; font-size: 14px; display: flex; justify-content: space-between;}
         .msg-text { font-size: 12px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-top: 2px; }
 
         /* --- Profile Screen --- */
-        .profile-header { padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .profile-header { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer;}
         .profile-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--white); box-shadow: var(--shadow); }
         .profile-info h2 { font-size: 20px; }
         .profile-badge { background: #F0F0F0; padding: 4px 10px; border-radius: 12px; font-size: 11px; display: inline-block; margin-top: 4px;}
         .profile-stats { display: flex; gap: 12px; padding: 0 15px 15px; }
-        .stat-box { background: white; border-radius: 12px; padding: 12px; flex: 1; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; }
+        .stat-box { background: white; border-radius: 12px; padding: 12px; flex: 1; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; cursor: pointer;}
         .stat-box .icon { font-size: 20px; }
         .stat-box .data { display: flex; flex-direction: column; }
         .stat-box .value { font-weight: 700; font-size: 16px; }
@@ -122,24 +122,22 @@
         .premium-btn { background: white; color: #4A0033; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; font-size: 13px; width: 100%; cursor: pointer;}
         
         .settings-list { padding: 0 15px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: var(--shadow); }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer;}
         .setting-item .left { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px;}
         .setting-item .left span { font-size: 18px; }
 
-        /* --- Bottom Navigation (حل مشکل تداخل با دکمه‌های گوشی) --- */
+        /* --- Bottom Navigation --- */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
             background: var(--white); display: flex; justify-content: space-around; align-items: center;
             box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; 
             border-top-left-radius: 18px; border-top-right-radius: 18px;
             padding-top: 8px;
-            padding-bottom: 35px; /* فاصله از دکمه‌های لمسی اندروید */
+            padding-bottom: 35px; 
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 10px; font-weight: 500; cursor: pointer; width: 20%; transition: 0.2s; }
         .nav-item svg { width: 22px; height: 22px; margin-bottom: 3px; fill: currentColor; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -149,8 +147,8 @@
         <div class="header">
             <h1>Discover</h1>
             <div class="header-icons">
-                <div class="icon-btn">⚡</div>
-                <div class="icon-btn">⚙️</div>
+                <div class="icon-btn" onclick="showAlert('Filters & Boost options')">⚡</div>
+                <div class="icon-btn" onclick="showAlert('Settings')">⚙️</div>
             </div>
         </div>
         <div class="suggested-title">Suggested for you today</div>
@@ -184,13 +182,13 @@
             <p>The faster you like them back, the higher your chance of chatting and dating!</p>
         </div>
         <div class="likes-tabs">
-            <div class="likes-tab active">All likes 🔒</div>
-            <div class="likes-tab">New likes 🔒</div>
-            <div class="likes-tab">Online 🔒</div>
+            <div class="likes-tab active" onclick="selectLikesTab(this, 'All likes')">All likes 🔒</div>
+            <div class="likes-tab" onclick="selectLikesTab(this, 'New likes')">New likes 🔒</div>
+            <div class="likes-tab" onclick="selectLikesTab(this, 'Online')">Online 🔒</div>
         </div>
         <div class="likes-grid" id="likes-container"></div>
         <div style="padding: 15px;">
-            <button class="paywall-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Reveal My Likes</button>
+            <button class="paywall-btn" onclick="showAlert('Payment Gateway Integration Coming Soon!')">Reveal My Likes</button>
         </div>
     </div>
 
@@ -198,11 +196,11 @@
     <div id="chats-screen" class="screen">
         <div class="chats-header">
             <h2>Chats</h2>
-            <div>🔔</div>
+            <div style="cursor:pointer; font-size: 20px;" onclick="showAlert('Notifications')">🔔</div>
         </div>
         <div style="padding: 0 15px 8px; font-weight: 600; font-size: 12px;">Likes and matches</div>
         <div class="stories">
-            <div class="story">
+            <div class="story" onclick="showAlert('Viewing new likes')">
                 <div class="story-circle">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80">
                     <div class="story-badge">1</div>
@@ -217,7 +215,8 @@
     <!-- ================= SCREEN 5: PROFILE ================= -->
     <div id="profile-screen" class="screen">
         <div class="header"><h1>Profile</h1></div>
-        <div class="profile-header">
+        
+        <div class="profile-header" onclick="showAlert('Edit Profile')">
             <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" class="profile-avatar">
             <div class="profile-info">
                 <h2>Hani, 29</h2>
@@ -226,14 +225,14 @@
         </div>
         
         <div class="profile-stats">
-            <div class="stat-box">
+            <div class="stat-box" onclick="showAlert('Activity details')">
                 <div class="icon">📊</div>
                 <div class="data">
                     <span class="value">Low</span>
                     <span class="label">Activity</span>
                 </div>
             </div>
-            <div class="stat-box">
+            <div class="stat-box" onclick="showAlert('Credit Store')">
                 <div class="icon">💎</div>
                 <div class="data">
                     <span class="value">30</span>
@@ -242,23 +241,22 @@
             </div>
         </div>
 
-        <!-- تغییر نام Badoo به Epoch Love -->
         <div class="premium-banner">
             <h3>Epoch Love Extra</h3>
             <p>Get seen by 4x more people, unlock unlimited swipes, and remove ads.</p>
-            <button class="premium-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Get Extra (from 5.99 €)</button>
+            <button class="premium-btn" onclick="showAlert('Payment Gateway Integration Coming Soon!')">Get Extra (from 5.99 €)</button>
         </div>
 
         <div class="settings-list">
-            <div class="setting-item">
+            <div class="setting-item" onclick="showAlert('Invisible mode settings')">
                 <div class="left"><span>👻</span> Turn on invisible mode</div>
                 <div>›</div>
             </div>
-            <div class="setting-item">
+            <div class="setting-item" onclick="showAlert('Privacy settings')">
                 <div class="left"><span>🛡️</span> Manage your privacy</div>
                 <div>›</div>
             </div>
-            <div class="setting-item">
+            <div class="setting-item" onclick="showAlert('Community Guidelines')">
                 <div class="left"><span>📖</span> Community Guidelines</div>
                 <div>›</div>
             </div>
@@ -309,6 +307,11 @@
         let currentEncounterIndex = 0;
         let currentProfiles = [...mockProfiles];
 
+        // تابع نمایش پیام (برای تست کلیک‌پذیری)
+        function showAlert(message) {
+            alert(message);
+        }
+
         function switchTab(tabName, element) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(tabName + '-screen').classList.add('active');
@@ -318,6 +321,12 @@
 
             if (tabName === 'encounters') loadEncounter();
             if (tabName === 'chats') renderChats();
+        }
+
+        function selectLikesTab(element, type) {
+            document.querySelectorAll('.likes-tab').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            showAlert(`Showing ${type} list`);
         }
 
         function renderDiscover(profiles) {
@@ -330,7 +339,7 @@
             profiles.slice(0, 2).forEach(profile => {
                 const tagsHtml = (profile.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
                 suggestedContainer.innerHTML += `
-                    <div class="card-large">
+                    <div class="card-large" onclick="showAlert('Viewing profile: ${profile.name}')">
                         <img src="${profile.image_url}" alt="${profile.name}">
                         <div class="overlay">
                             <div class="name">${profile.name}, ${profile.age} <span class="verified-badge"></span></div>
@@ -344,7 +353,7 @@
             profiles.slice(2).forEach(profile => {
                 const onlineBadge = profile.is_online ? '<span class="status online"></span>' : '';
                 everyoneContainer.innerHTML += `
-                    <div class="card-small">
+                    <div class="card-small" onclick="showAlert('Viewing profile: ${profile.name}')">
                         <img src="${profile.image_url}" alt="${profile.name}">
                         <div class="info">
                             <div class="name">${profile.name}, ${profile.age} ${onlineBadge}</div>
@@ -390,7 +399,7 @@
             
             currentProfiles.slice(0, 4).forEach(profile => {
                 container.innerHTML += `
-                    <div class="card-small">
+                    <div class="card-small" onclick="showAlert('Reveal this like? Upgrade to Epoch Love Extra!')">
                         <img src="${profile.image_url}" class="blur-img">
                         <div class="info" style="text-align: center;">
                             <div class="name" style="font-size: 18px;">?</div>
@@ -406,10 +415,10 @@
             
             mockChats.forEach(chat => {
                 container.innerHTML += `
-                    <div class="msg-item">
+                    <div class="msg-item" onclick="showAlert('Opening chat with ${chat.name}...')">
                         <img src="${chat.img}" class="msg-avatar">
                         <div class="msg-content">
-                            <div class="msg-name">${chat.name} <span style="color: #ddd;">☆</span></div>
+                            <div class="msg-name">${chat.name} <span style="color: #ddd;" onclick="event.stopPropagation(); showAlert('Starred ${chat.name}')">☆</span></div>
                             <div class="msg-text">${chat.text}</div>
                         </div>
                     </div>
