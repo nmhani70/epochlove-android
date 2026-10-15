@@ -6,191 +6,118 @@
     <title>Epoch Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6A0DAD; /* Badoo Purple */
-            --secondary: #FF3B7A; /* Pink */
-            --bg-light: #F8F9FA;
-            --white: #FFFFFF;
-            --text-dark: #1A1A1A;
-            --text-gray: #6C757D;
-            --shadow: 0 4px 15px rgba(0,0,0,0.08);
-            --radius: 20px;
-        }
-
+        :root { --primary: #6A0DAD; --secondary: #FF3B7A; --bg-light: #F8F9FA; --white: #FFFFFF; --text-dark: #1A1A1A; --text-gray: #6C757D; --shadow: 0 4px 15px rgba(0,0,0,0.08); --radius: 20px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-light); color: var(--text-dark); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-
-        /* --- Main App Container --- */
-        #app { flex: 1; overflow-y: auto; padding-bottom: 80px; display: none; }
-        #app.active { display: block; }
-
-        /* --- Bottom Navigation --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
-            background: var(--white); display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 20px; border-top-right-radius: 20px;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-gray); font-size: 11px; font-weight: 500; cursor: pointer; width: 20%; height: 100%; transition: 0.2s;
-        }
+        #app { flex: 1; overflow-y: auto; padding-bottom: 80px; display: block; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: var(--white); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 11px; font-weight: 500; cursor: pointer; width: 20%; height: 100%; transition: 0.2s; }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.active svg { transform: scale(1.1); }
-
-        /* --- Discover Screen --- */
         .header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; background: var(--white); }
-        .header h1 { font-size: 28px; font-weight: 700; color: var(--text-dark); }
-        .header-icons { display: flex; gap: 15px; }
-        .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; }
-
-        .suggested-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; color: var(--text-dark); }
+        .header h1 { font-size: 28px; font-weight: 700; }
+        .suggested-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
         .horizontal-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 20px; scroll-snap-type: x mandatory; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-        .card-large {
-            min-width: 280px; height: 400px; border-radius: var(--radius); position: relative; overflow: hidden;
-            background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow);
-        }
+        .card-large { min-width: 280px; height: 400px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); }
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
         .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
         .card-large .name { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .verified-badge { width: 18px; height: 18px; background: #1DA1F2; border-radius: 50%; display: inline-block; }
         .card-large .location { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .tag { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; font-size: 12px; backdrop-filter: blur(5px); }
-        .card-large .actions { position: absolute; bottom: 20px; right: 20px; display: flex; gap: 10px; }
-        .action-btn { width: 50px; height: 50px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .action-btn svg { width: 24px; height: 24px; }
-
         .grid-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
         .card-small { border-radius: 15px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; }
         .card-small img { width: 100%; height: 100%; object-fit: cover; }
         .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: white; }
         .card-small .name { font-size: 14px; font-weight: 600; }
-        .card-small .status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
         .status.online { background: #4CAF50; }
     </style>
 </head>
 <body>
 
-    <!-- Main App Container -->
-    <div id="app" class="active">
-        <!-- Discover Screen -->
+    <div id="app">
         <div id="discover-screen">
-            <div class="header">
-                <h1>Discover</h1>
-                <div class="header-icons">
-                    <div class="icon-btn">⚡</div>
-                    <div class="icon-btn">⚙️</div>
-                </div>
-            </div>
-
+            <div class="header"><h1>Discover</h1></div>
             <div class="suggested-title">Suggested for you today</div>
-            <div class="horizontal-scroll">
-                <!-- Card 1 -->
-                <div class="card-large">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="overlay">
-                        <div class="name">Guadalupe, 27 <span class="verified-badge"></span></div>
-                        <div class="location">Dubai</div>
-                        <div class="tags">
-                            <span class="tag">Documentaries</span>
-                            <span class="tag">Takeaways</span>
-                            <span class="tag">Eating out</span>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <div class="action-btn" style="color: var(--secondary);">❤️</div>
-                    </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="card-large">
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="overlay">
-                        <div class="name">Ren, 24 <span class="verified-badge"></span></div>
-                        <div class="location">Dubai</div>
-                        <div class="tags">
-                            <span class="tag">Wine</span>
-                            <span class="tag">Travel</span>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <div class="action-btn" style="color: var(--secondary);">❤️</div>
-                    </div>
-                </div>
-            </div>
-
+            <div id="suggested-container" class="horizontal-scroll"></div>
             <div class="grid-title">Everyone</div>
-            <div class="grid-container">
-                <!-- Grid Item 1 -->
-                <div class="card-small">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="info">
-                        <div class="name">Sonia, 32</div>
-                    </div>
-                </div>
-                <!-- Grid Item 2 -->
-                <div class="card-small">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="info">
-                        <div class="name">Marg, 27 <span class="status online"></span></div>
-                    </div>
-                </div>
-                <!-- Grid Item 3 -->
-                <div class="card-small">
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="info">
-                        <div class="name">Emily, 28 <span class="status online"></span></div>
-                    </div>
-                </div>
-                <!-- Grid Item 4 -->
-                <div class="card-small">
-                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=500&q=80" alt="Profile">
-                    <div class="info">
-                        <div class="name">Tella, 30</div>
-                    </div>
-                </div>
-            </div>
+            <div id="everyone-container" class="grid-container"></div>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('discover')">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            Discover
-        </div>
-        <div class="nav-item" onclick="switchTab('encounters')">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            Encounters
-        </div>
-        <div class="nav-item" onclick="switchTab('likes')">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            Likes
-        </div>
-        <div class="nav-item" onclick="switchTab('chats')">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-            Chats
-        </div>
-        <div class="nav-item" onclick="switchTab('profile')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            Profile
-        </div>
+        <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>Discover</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Encounters</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Likes</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Chats</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Profile</div>
     </div>
 
+    <!-- ۱. کتابخانه Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // اسکریپت ساده برای جابجایی بین تب‌ها (فعلاً فقط Discover رو نشون میده)
-        function switchTab(tabName) {
-            // حذف کلاس active از همه تب‌ها
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            // اضافه کردن کلاس active به تب کلیک شده
-            event.currentTarget.classList.add('active');
-            
-            // در آینده اینجا کد برای نمایش صفحات دیگر نوشته میشه
-            console.log("Switched to: " + tabName);
+        // ⚠️⚠️ این دو خط را با اطلاعات پروژه خودت جایگزین کن ⚠️⚠️
+        const supabaseUrl = 'آدرس_پروژه_خودت_را_اینجا_بگذار';
+        const supabaseKey = 'کلید_Publishable_خودت_را_اینجا_بگذار';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // تابع برای دریافت و نمایش پروفایل‌ها
+        async function loadProfiles() {
+            const suggestedContainer = document.getElementById('suggested-container');
+            const everyoneContainer = document.getElementById('everyone-container');
+
+            // دریافت اطلاعات از Supabase
+            let { data: profiles, error } = await supabase.from('profiles').select('*');
+
+            if (error) {
+                console.error('Error fetching profiles:', error);
+                suggestedContainer.innerHTML = '<p>خطا در اتصال به سرور</p>';
+                return;
+            }
+
+            if (profiles.length === 0) {
+                suggestedContainer.innerHTML = '<p>هیچ کاربری یافت نشد</p>';
+                return;
+            }
+
+            // پاک کردن محتوای قبلی
+            suggestedContainer.innerHTML = '';
+            everyoneContainer.innerHTML = '';
+
+            // ۳ کارت اول برای بخش Suggested
+            profiles.slice(0, 2).forEach(profile => {
+                const tagsHtml = (profile.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
+                suggestedContainer.innerHTML += `
+                    <div class="card-large">
+                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
+                        <div class="overlay">
+                            <div class="name">${profile.name}, ${profile.age || ''}</div>
+                            <div class="location">${profile.location || 'Unknown'}</div>
+                            <div class="tags">${tagsHtml}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // بقیه برای بخش Everyone
+            profiles.slice(2).forEach(profile => {
+                const onlineBadge = profile.is_online ? '<span class="status online"></span>' : '';
+                everyoneContainer.innerHTML += `
+                    <div class="card-small">
+                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
+                        <div class="info">
+                            <div class="name">${profile.name}, ${profile.age || ''} ${onlineBadge}</div>
+                        </div>
+                    </div>
+                `;
+            });
         }
+
+        // اجرای تابع هنگام باز شدن اپ
+        loadProfiles();
     </script>
 </body>
 </html>
