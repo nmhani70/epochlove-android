@@ -13,136 +13,132 @@
             --white: #FFFFFF;
             --text-dark: #1A1A1A;
             --text-gray: #6C757D;
-            --shadow: 0 4px 15px rgba(0,0,0,0.08);
-            --radius: 20px;
+            --shadow: 0 4px 10px rgba(0,0,0,0.06);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
+        /* حل مشکل تداخل با دکمه‌های بالا و پایین گوشی */
         body { 
             background-color: var(--bg-light); 
             color: var(--text-dark); 
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            padding-top: env(safe-area-inset-top, 20px); 
-            padding-bottom: env(safe-area-inset-bottom, 10px); 
+            padding-top: 45px; /* فاصله از ساعت و باتری */
+            padding-bottom: 10px; /* فاصله از پایین */
             overflow: hidden;
         }
 
         /* --- Screens --- */
-        .screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 85px; }
         .screen.active { display: block; }
 
         /* --- Discover Screen --- */
-        .header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 28px; font-weight: 700; }
-        .header-icons { display: flex; gap: 15px; }
-        .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 18px;}
+        .header { padding: 15px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 24px; font-weight: 700; } /* کوچیک‌تر شد */
+        .header-icons { display: flex; gap: 12px; }
+        .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 16px;}
         
-        .suggested-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
-        .horizontal-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 20px; scroll-snap-type: x mandatory; }
+        .suggested-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
+        .horizontal-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px 15px; scroll-snap-type: x mandatory; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
         
-        .card-large { min-width: 280px; height: 400px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); }
+        .card-large { min-width: 250px; height: 350px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); }
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
-        .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
-        .card-large .name { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .verified-badge { width: 18px; height: 18px; background: #1DA1F2; border-radius: 50%; display: inline-block; position: relative;}
-        .verified-badge::after { content: '✓'; color: white; font-size: 12px; position: absolute; left: 4px; top: -1px;}
-        .card-large .location { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .tag { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; font-size: 12px; backdrop-filter: blur(5px); }
+        .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
+        .card-large .name { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .verified-badge { width: 16px; height: 16px; background: #1DA1F2; border-radius: 50%; display: inline-block; position: relative;}
+        .verified-badge::after { content: '✓'; color: white; font-size: 10px; position: absolute; left: 4px; top: -1px;}
+        .card-large .location { font-size: 12px; opacity: 0.9; margin-bottom: 8px; }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tag { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 11px; backdrop-filter: blur(5px); }
         
-        .grid-title { padding: 0 20px; margin-bottom: 15px; font-size: 18px; font-weight: 600; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
-        .card-small { border-radius: 15px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; }
+        .grid-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px 20px; }
+        .card-small { border-radius: 12px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; }
         .card-small img { width: 100%; height: 100%; object-fit: cover; }
-        .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
-        .card-small .name { font-size: 14px; font-weight: 600; }
-        .status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .card-small .info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 8px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
+        .card-small .name { font-size: 12px; font-weight: 600; }
+        .status { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-left: 4px; }
         .status.online { background: #4CAF50; }
 
         /* --- Encounters Screen --- */
-        .encounter-container { padding: 20px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .encounter-card { width: 100%; height: 70vh; border-radius: var(--radius); position: relative; overflow: hidden; box-shadow: var(--shadow); background: #e0e0e0;}
+        .encounter-container { padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .encounter-card { width: 100%; height: 65vh; border-radius: var(--radius); position: relative; overflow: hidden; box-shadow: var(--shadow); background: #e0e0e0;}
         .encounter-card img { width: 100%; height: 100%; object-fit: cover; }
-        .encounter-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
-        .encounter-info .name { font-size: 28px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .encounter-info .detail { font-size: 14px; margin-top: 5px; opacity: 0.9;}
-        .encounter-actions { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
-        .btn-action { width: 70px; height: 70px; border-radius: 50%; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: 0.2s; border: none; }
+        .encounter-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
+        .encounter-info .name { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .encounter-info .detail { font-size: 13px; margin-top: 4px; opacity: 0.9;}
+        .encounter-actions { display: flex; justify-content: center; gap: 25px; margin-top: 15px; }
+        .btn-action { width: 60px; height: 60px; border-radius: 50%; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: 0.2s; border: none; }
         .btn-action:active { transform: scale(0.9); }
         .btn-pass { color: #FF3B3B; }
         .btn-like { color: var(--secondary); }
 
         /* --- Likes Screen --- */
-        .likes-header { padding: 20px; }
-        .likes-header h2 { font-size: 24px; margin-bottom: 10px;}
-        .likes-header p { font-size: 14px; color: var(--text-gray); }
-        .likes-tabs { display: flex; padding: 0 20px; gap: 20px; border-bottom: 1px solid #eee; margin-bottom: 20px;}
-        .likes-tab { padding: 10px 0; font-weight: 600; color: var(--text-gray); cursor: pointer; border-bottom: 2px solid transparent; }
+        .likes-header { padding: 15px; }
+        .likes-header h2 { font-size: 20px; margin-bottom: 8px;}
+        .likes-header p { font-size: 13px; color: var(--text-gray); }
+        .likes-tabs { display: flex; padding: 0 15px; gap: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px;}
+        .likes-tab { padding: 8px 0; font-weight: 600; color: var(--text-gray); cursor: pointer; border-bottom: 2px solid transparent; font-size: 14px;}
         .likes-tab.active { color: var(--text-dark); border-bottom: 2px solid var(--text-dark); }
-        .likes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .likes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; }
         .blur-img { filter: blur(15px); }
-        .paywall-card { grid-column: span 2; background: white; border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow); border: 1px solid #eee; margin-top: 10px;}
-        .paywall-card h3 { font-size: 18px; margin-bottom: 10px; }
-        .paywall-card p { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
-        .paywall-btn { background: var(--text-dark); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; }
+        .paywall-btn { background: var(--text-dark); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-size: 14px; font-weight: 600; width: 100%; cursor: pointer; }
 
         /* --- Chats Screen --- */
-        .chats-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .chats-header h2 { font-size: 24px; }
-        .stories { display: flex; gap: 15px; padding: 0 20px 20px; overflow-x: auto; }
-        .story { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .story-circle { width: 70px; height: 70px; border-radius: 50%; background: #eee; border: 2px solid var(--primary); padding: 2px; position: relative; }
+        .chats-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chats-header h2 { font-size: 20px; }
+        .stories { display: flex; gap: 12px; padding: 0 15px 15px; overflow-x: auto; }
+        .story { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .story-circle { width: 60px; height: 60px; border-radius: 50%; background: #eee; border: 2px solid var(--primary); padding: 2px; position: relative; }
         .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .story-badge { position: absolute; bottom: 0; right: 0; background: var(--secondary); color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;}
-        .story-name { font-size: 12px; color: var(--text-gray); }
-        
-        .messages-list { padding: 0 20px; }
-        .msg-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
-        .msg-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        .story-badge { position: absolute; bottom: 0; right: 0; background: var(--secondary); color: white; font-size: 9px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;}
+        .story-name { font-size: 11px; color: var(--text-gray); }
+        .messages-list { padding: 0 15px; }
+        .msg-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
         .msg-content { flex: 1; }
-        .msg-name { font-weight: 600; font-size: 16px; display: flex; justify-content: space-between;}
-        .msg-text { font-size: 14px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; margin-top: 3px; }
+        .msg-name { font-weight: 600; font-size: 14px; display: flex; justify-content: space-between;}
+        .msg-text { font-size: 12px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-top: 2px; }
 
         /* --- Profile Screen --- */
-        .profile-header { padding: 20px; display: flex; align-items: center; gap: 20px; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: var(--shadow); }
-        .profile-info h2 { font-size: 24px; }
-        .profile-badge { background: #F0F0F0; padding: 5px 12px; border-radius: 15px; font-size: 12px; display: inline-block; margin-top: 5px;}
-        
-        .profile-stats { display: flex; gap: 15px; padding: 0 20px 20px; }
-        .stat-box { background: white; border-radius: 15px; padding: 15px; flex: 1; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
-        .stat-box .icon { font-size: 24px; }
+        .profile-header { padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--white); box-shadow: var(--shadow); }
+        .profile-info h2 { font-size: 20px; }
+        .profile-badge { background: #F0F0F0; padding: 4px 10px; border-radius: 12px; font-size: 11px; display: inline-block; margin-top: 4px;}
+        .profile-stats { display: flex; gap: 12px; padding: 0 15px 15px; }
+        .stat-box { background: white; border-radius: 12px; padding: 12px; flex: 1; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; }
+        .stat-box .icon { font-size: 20px; }
         .stat-box .data { display: flex; flex-direction: column; }
-        .stat-box .value { font-weight: 700; font-size: 18px; }
-        .stat-box .label { font-size: 12px; color: var(--text-gray); }
+        .stat-box .value { font-weight: 700; font-size: 16px; }
+        .stat-box .label { font-size: 11px; color: var(--text-gray); }
         
-        .premium-banner { background: #4A0033; color: white; margin: 0 20px 20px; border-radius: var(--radius); padding: 20px; text-align: center; position: relative; overflow: hidden;}
-        .premium-banner h3 { color: #FFB6C1; font-size: 20px; margin-bottom: 10px; }
-        .premium-banner p { font-size: 14px; margin-bottom: 15px; }
-        .premium-btn { background: white; color: #4A0033; border: none; padding: 12px 25px; border-radius: 25px; font-weight: 700; font-size: 14px; width: 100%; cursor: pointer;}
+        .premium-banner { background: #4A0033; color: white; margin: 0 15px 15px; border-radius: var(--radius); padding: 15px; text-align: center; position: relative; overflow: hidden;}
+        .premium-banner h3 { color: #FFB6C1; font-size: 18px; margin-bottom: 8px; }
+        .premium-banner p { font-size: 12px; margin-bottom: 12px; }
+        .premium-btn { background: white; color: #4A0033; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; font-size: 13px; width: 100%; cursor: pointer;}
         
-        .settings-list { padding: 0 20px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 15px; margin-bottom: 10px; box-shadow: var(--shadow); }
-        .setting-item .left { display: flex; align-items: center; gap: 10px; font-weight: 500;}
-        .setting-item .left span { font-size: 20px; }
+        .settings-list { padding: 0 15px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: var(--shadow); }
+        .setting-item .left { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px;}
+        .setting-item .left span { font-size: 18px; }
 
-        /* --- Bottom Navigation --- */
+        /* --- Bottom Navigation (حل مشکل تداخل با دکمه‌های گوشی) --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
             background: var(--white); display: flex; justify-content: space-around; align-items: center;
             box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; 
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-            padding-bottom: env(safe-area-inset-bottom, 10px); 
+            border-top-left-radius: 18px; border-top-right-radius: 18px;
+            padding-top: 8px;
+            padding-bottom: 35px; /* فاصله از دکمه‌های لمسی اندروید */
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 11px; font-weight: 500; cursor: pointer; width: 20%; height: 100%; transition: 0.2s; }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 10px; font-weight: 500; cursor: pointer; width: 20%; transition: 0.2s; }
+        .nav-item svg { width: 22px; height: 22px; margin-bottom: 3px; fill: currentColor; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
         
-        /* Utilities */
         .hidden { display: none !important; }
     </style>
 </head>
@@ -192,10 +188,8 @@
             <div class="likes-tab">New likes 🔒</div>
             <div class="likes-tab">Online 🔒</div>
         </div>
-        <div class="likes-grid" id="likes-container">
-            <!-- Populated by JS -->
-        </div>
-        <div style="padding: 20px;">
+        <div class="likes-grid" id="likes-container"></div>
+        <div style="padding: 15px;">
             <button class="paywall-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Reveal My Likes</button>
         </div>
     </div>
@@ -206,7 +200,7 @@
             <h2>Chats</h2>
             <div>🔔</div>
         </div>
-        <div style="padding: 0 20px 10px; font-weight: 600; font-size: 14px;">Likes and matches</div>
+        <div style="padding: 0 15px 8px; font-weight: 600; font-size: 12px;">Likes and matches</div>
         <div class="stories">
             <div class="story">
                 <div class="story-circle">
@@ -216,10 +210,8 @@
                 <span class="story-name">Likes</span>
             </div>
         </div>
-        <div style="padding: 0 20px 10px; font-weight: 600; font-size: 14px;">Messages</div>
-        <div class="messages-list" id="chats-container">
-            <!-- Populated by JS -->
-        </div>
+        <div style="padding: 0 15px 8px; font-weight: 600; font-size: 12px;">Messages</div>
+        <div class="messages-list" id="chats-container"></div>
     </div>
 
     <!-- ================= SCREEN 5: PROFILE ================= -->
@@ -250,8 +242,9 @@
             </div>
         </div>
 
+        <!-- تغییر نام Badoo به Epoch Love -->
         <div class="premium-banner">
-            <h3>Badoo Extra</h3>
+            <h3>Epoch Love Extra</h3>
             <p>Get seen by 4x more people, unlock unlimited swipes, and remove ads.</p>
             <button class="premium-btn" onclick="alert('Payment Gateway Integration Coming Soon!')">Get Extra (from 5.99 €)</button>
         </div>
@@ -298,7 +291,6 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        // داده‌های تستی (Mock Data) - اگر Supabase وصل نشد، اپ با اینها کار می‌کند
         const mockProfiles = [
             { id: 1, name: "Guadalupe", age: 27, location: "Dubai", is_online: true, tags: ["Documentaries", "Takeaways", "Eating out"], image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" },
             { id: 2, name: "Ren", age: 24, location: "Dubai", is_online: true, tags: ["Wine", "Travel"], image_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" },
@@ -308,7 +300,6 @@
             { id: 6, name: "Tella", age: 30, location: "Rome", is_online: false, tags: ["Cooking"], image_url: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=500&q=80" }
         ];
 
-        // داده‌های تستی برای چت
         const mockChats = [
             { name: "Lisa", text: "Lisa where are you from", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=150&q=80" },
             { name: "Nancy", text: "This is the bot's ID", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" },
@@ -318,23 +309,17 @@
         let currentEncounterIndex = 0;
         let currentProfiles = [...mockProfiles];
 
-        // --- Tab Switching Logic ---
         function switchTab(tabName, element) {
-            // Hide all screens
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-            // Show selected screen
             document.getElementById(tabName + '-screen').classList.add('active');
             
-            // Update Nav Bar
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
 
-            // Special actions when opening a tab
             if (tabName === 'encounters') loadEncounter();
             if (tabName === 'chats') renderChats();
         }
 
-        // --- Render Discover Screen ---
         function renderDiscover(profiles) {
             const suggestedContainer = document.getElementById('suggested-container');
             const everyoneContainer = document.getElementById('everyone-container');
@@ -369,10 +354,9 @@
             });
         }
 
-        // --- Render Encounters Screen ---
         function loadEncounter() {
             if (currentEncounterIndex >= currentProfiles.length) {
-                currentEncounterIndex = 0; // Loop back
+                currentEncounterIndex = 0;
             }
             const profile = currentProfiles[currentEncounterIndex];
             if (!profile) return;
@@ -383,7 +367,6 @@
         }
 
         function swipe(action) {
-            // انیمیشن ساده
             const card = document.getElementById('encounter-card');
             if (action === 'like') {
                 card.style.transform = 'translateX(100px) rotate(10deg)';
@@ -401,25 +384,22 @@
             }, 300);
         }
 
-        // --- Render Likes Screen ---
         function renderLikes() {
             const container = document.getElementById('likes-container');
             container.innerHTML = '';
             
-            // 4 blurred cards to simulate locked likes
             currentProfiles.slice(0, 4).forEach(profile => {
                 container.innerHTML += `
                     <div class="card-small">
                         <img src="${profile.image_url}" class="blur-img">
                         <div class="info" style="text-align: center;">
-                            <div class="name" style="font-size: 20px;">?</div>
+                            <div class="name" style="font-size: 18px;">?</div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // --- Render Chats Screen ---
         function renderChats() {
             const container = document.getElementById('chats-container');
             container.innerHTML = '';
@@ -437,29 +417,11 @@
             });
         }
 
-        // --- Initialize App ---
         function initApp() {
-            // Render based on mock data immediately so UI is not empty
             renderDiscover(mockProfiles);
             renderLikes();
-            
-            // Try to fetch from Supabase if available
-            // (If you set up Supabase correctly, uncomment the lines below in the future)
-            /*
-            const supabaseUrl = 'YOUR_SUPABASE_URL';
-            const supabaseKey = 'YOUR_SUPABASE_KEY';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-            
-            supabase.from('profiles').select('*').then(({data, error}) => {
-                if (!error && data.length > 0) {
-                    currentProfiles = data;
-                    renderDiscover(data);
-                }
-            });
-            */
         }
 
-        // Run
         initApp();
     </script>
 </body>
