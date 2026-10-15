@@ -7,43 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6A0DAD;
-            --secondary: #FF3B7A;
-            --bg-light: #F8F9FA;
-            --white: #FFFFFF;
-            --text-dark: #1A1A1A;
-            --text-gray: #6C757D;
-            --shadow: 0 4px 10px rgba(0,0,0,0.06);
-            --radius: 16px;
-            --crush-color: #9C27B0; /* رنگ بنفش برای کراش */
+            --primary: #6A0DAD; --secondary: #FF3B7A; --bg-light: #F8F9FA;
+            --white: #FFFFFF; --text-dark: #1A1A1A; --text-gray: #6C757D;
+            --shadow: 0 4px 10px rgba(0,0,0,0.06); --radius: 16px;
+            --crush-color: #9C27B0;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background-color: var(--bg-light); 
-            color: var(--text-dark); 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            padding-top: 45px;
-            padding-bottom: 10px;
-            overflow: hidden;
-        }
-
+        body { background-color: var(--bg-light); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; padding-top: 45px; padding-bottom: 10px; overflow: hidden; }
         .screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 85px; }
         .screen.active { display: block; }
 
-        /* --- Discover Screen --- */
+        /* --- Discover --- */
         .header { padding: 15px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 24px; font-weight: 700; } 
+        .header h1 { font-size: 24px; font-weight: 700; }
         .header-icons { display: flex; gap: 12px; }
         .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;}
-        
         .suggested-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
         .horizontal-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px 15px; scroll-snap-type: x mandatory; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
-        
         .card-large { min-width: 250px; height: 350px; border-radius: var(--radius); position: relative; overflow: hidden; background: #e0e0e0; scroll-snap-align: center; box-shadow: var(--shadow); cursor: pointer; }
         .card-large img { width: 100%; height: 100%; object-fit: cover; }
         .card-large .overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; }
@@ -53,7 +34,6 @@
         .card-large .location { font-size: 12px; opacity: 0.9; margin-bottom: 8px; }
         .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .tag { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 11px; backdrop-filter: blur(5px); }
-        
         .grid-title { padding: 0 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px 20px; }
         .card-small { border-radius: 12px; overflow: hidden; position: relative; background: #e0e0e0; aspect-ratio: 3/4; cursor: pointer; }
@@ -63,52 +43,24 @@
         .status { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-left: 4px; }
         .status.online { background: #4CAF50; }
 
-        /* --- Encounters Screen --- */
+        /* --- Encounters --- */
         .encounter-container { padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
-        
-        /* کارت با انیمیشن نرم */
-        .encounter-card { 
-            width: 100%; height: 65vh; border-radius: var(--radius); 
-            position: relative; overflow: hidden; box-shadow: var(--shadow); 
-            background: #e0e0e0; 
-            touch-action: none; /* مهم برای اینکه مرورگر حرکات لمسی رو بلوکه نکنه */
-            will-change: transform;
-            user-select: none;
-            cursor: grab;
-        }
+        .encounter-card { width: 100%; height: 65vh; border-radius: var(--radius); position: relative; overflow: hidden; box-shadow: var(--shadow); background: #e0e0e0; touch-action: none; will-change: transform; user-select: none; cursor: grab; }
         .encounter-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
         .encounter-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; pointer-events: none;}
         .encounter-info .name { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .encounter-info .detail { font-size: 13px; margin-top: 4px; opacity: 0.9;}
-        
-        /* برچسب‌های PASS و LIKE که هنگام کشیدن ظاهر می‌شن */
-        .swipe-badge {
-            position: absolute; top: 30px; padding: 10px 20px; border-radius: 10px;
-            font-size: 24px; font-weight: 800; opacity: 0; transition: opacity 0.2s;
-            pointer-events: none; border: 4px solid;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
-        }
+        .swipe-badge { position: absolute; top: 30px; padding: 10px 20px; border-radius: 10px; font-size: 24px; font-weight: 800; opacity: 0; transition: opacity 0.2s; pointer-events: none; border: 4px solid; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); }
         .swipe-badge.like { right: 30px; color: #4CAF50; border-color: #4CAF50; transform: rotate(15deg); }
         .swipe-badge.pass { left: 30px; color: #FF3B3B; border-color: #FF3B3B; transform: rotate(-15deg); }
-
         .encounter-actions { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-        .btn-action { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 24px; cursor: pointer; transition: 0.2s; border: none; 
-        }
+        .btn-action { width: 60px; height: 60px; border-radius: 50%; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: 0.2s; border: none; }
         .btn-action:active { transform: scale(0.9); }
         .btn-pass { color: #FF3B3B; }
         .btn-like { color: var(--secondary); }
-        .btn-crush { 
-            width: 50px; height: 50px; font-size: 20px;
-            color: var(--crush-color); 
-            background: linear-gradient(135deg, #F3E5F5, #E1BEE7);
-            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
-        }
+        .btn-crush { width: 50px; height: 50px; font-size: 20px; color: var(--crush-color); background: linear-gradient(135deg, #F3E5F5, #E1BEE7); box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3); }
 
-        /* --- Likes Screen --- */
+        /* --- Likes --- */
         .likes-header { padding: 15px; }
         .likes-header h2 { font-size: 20px; margin-bottom: 8px;}
         .likes-header p { font-size: 13px; color: var(--text-gray); }
@@ -119,7 +71,7 @@
         .blur-img { filter: blur(15px); }
         .paywall-btn { background: var(--text-dark); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-size: 14px; font-weight: 600; width: 100%; cursor: pointer; }
 
-        /* --- Chats Screen --- */
+        /* --- Chats --- */
         .chats-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .chats-header h2 { font-size: 20px; }
         .stories { display: flex; gap: 12px; padding: 0 15px 15px; overflow-x: auto; }
@@ -135,7 +87,7 @@
         .msg-name { font-weight: 600; font-size: 14px; display: flex; justify-content: space-between;}
         .msg-text { font-size: 12px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-top: 2px; }
 
-        /* --- Profile Screen --- */
+        /* --- Profile --- */
         .profile-header { padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer;}
         .profile-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--white); box-shadow: var(--shadow); }
         .profile-info h2 { font-size: 20px; }
@@ -146,34 +98,27 @@
         .stat-box .data { display: flex; flex-direction: column; }
         .stat-box .value { font-weight: 700; font-size: 16px; }
         .stat-box .label { font-size: 11px; color: var(--text-gray); }
-        
         .premium-banner { background: #4A0033; color: white; margin: 0 15px 15px; border-radius: var(--radius); padding: 15px; text-align: center; position: relative; overflow: hidden;}
         .premium-banner h3 { color: #FFB6C1; font-size: 18px; margin-bottom: 8px; }
         .premium-banner p { font-size: 12px; margin-bottom: 12px; }
         .premium-btn { background: white; color: #4A0033; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; font-size: 13px; width: 100%; cursor: pointer;}
-        
         .settings-list { padding: 0 15px; }
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer;}
         .setting-item .left { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px;}
         .setting-item .left span { font-size: 18px; }
 
-        /* --- Bottom Navigation --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
-            background: var(--white); display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; 
-            border-top-left-radius: 18px; border-top-right-radius: 18px;
-            padding-top: 8px;
-            padding-bottom: 35px; 
-        }
+        /* --- Bottom Nav --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: auto; background: var(--white); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 18px; border-top-right-radius: 18px; padding-top: 8px; padding-bottom: 35px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-gray); font-size: 10px; font-weight: 500; cursor: pointer; width: 20%; transition: 0.2s; }
         .nav-item svg { width: 22px; height: 22px; margin-bottom: 3px; fill: currentColor; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
+
+        /* Loading state */
+        .loading-box { text-align: center; padding: 40px 20px; color: var(--text-gray); }
     </style>
 </head>
 <body>
 
-    <!-- ================= SCREEN 1: DISCOVER ================= -->
     <div id="discover-screen" class="screen active">
         <div class="header">
             <h1>Discover</h1>
@@ -183,12 +128,13 @@
             </div>
         </div>
         <div class="suggested-title">Suggested for you today</div>
-        <div id="suggested-container" class="horizontal-scroll"></div>
+        <div id="suggested-container" class="horizontal-scroll">
+            <div class="loading-box">Loading profiles...</div>
+        </div>
         <div class="grid-title">Everyone</div>
         <div id="everyone-container" class="grid-container"></div>
     </div>
 
-    <!-- ================= SCREEN 2: ENCOUNTERS (SWIPE) ================= -->
     <div id="encounters-screen" class="screen">
         <div class="header"><h1>Encounters</h1></div>
         <div class="encounter-container">
@@ -209,7 +155,6 @@
         </div>
     </div>
 
-    <!-- ================= SCREEN 3: LIKES ================= -->
     <div id="likes-screen" class="screen">
         <div class="likes-header">
             <h2>Your likes list</h2>
@@ -226,7 +171,6 @@
         </div>
     </div>
 
-    <!-- ================= SCREEN 4: CHATS ================= -->
     <div id="chats-screen" class="screen">
         <div class="chats-header">
             <h2>Chats</h2>
@@ -246,10 +190,8 @@
         <div class="messages-list" id="chats-container"></div>
     </div>
 
-    <!-- ================= SCREEN 5: PROFILE ================= -->
     <div id="profile-screen" class="screen">
         <div class="header"><h1>Profile</h1></div>
-        
         <div class="profile-header" onclick="showAlert('Edit Profile')">
             <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" class="profile-avatar">
             <div class="profile-info">
@@ -257,7 +199,6 @@
                 <div class="profile-badge">❤️ Ready for a relationship</div>
             </div>
         </div>
-        
         <div class="profile-stats">
             <div class="stat-box" onclick="showAlert('Activity details')">
                 <div class="icon">📊</div>
@@ -274,13 +215,11 @@
                 </div>
             </div>
         </div>
-
         <div class="premium-banner">
             <h3>Epoch Love Extra</h3>
             <p>Get seen by 4x more people, unlock unlimited swipes, and remove ads.</p>
             <button class="premium-btn" onclick="showAlert('Payment Gateway Integration Coming Soon!')">Get Extra (from 5.99 €)</button>
         </div>
-
         <div class="settings-list">
             <div class="setting-item" onclick="showAlert('Invisible mode settings')">
                 <div class="left"><span>👻</span> Turn on invisible mode</div>
@@ -297,7 +236,6 @@
         </div>
     </div>
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('discover', this)">
             <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
@@ -321,8 +259,18 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // ⚠️⚠️ اطلاعات اتصال Supabase شما اینجا قرار داده شد ⚠️⚠️
+        const supabaseUrl = 'https://jngcckefdklrxgdloar.supabase.co';
+        const supabaseKey = 'sb_publishable_roFEhbqzHWsTG2l4Wbp_wA_tZdGU_xZ';
+
+        let supabaseClient = null;
+        try {
+            supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        } catch(e) { console.error("Supabase init failed:", e); }
+
+        // داده‌های تستی (فقط اگر Supabase کار نکرد استفاده میشن)
         const mockProfiles = [
             { id: 1, name: "Guadalupe", age: 27, location: "Dubai", is_online: true, tags: ["Documentaries", "Takeaways", "Eating out"], image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" },
             { id: 2, name: "Ren", age: 24, location: "Dubai", is_online: true, tags: ["Wine", "Travel"], image_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" },
@@ -338,18 +286,16 @@
             { name: "Miral", text: "Hi", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80" }
         ];
 
+        let currentProfiles = [...mockProfiles]; // به صورت پیش‌فرض با تستی پر میشه
         let currentEncounterIndex = 0;
-        let currentProfiles = [...mockProfiles];
 
         function showAlert(message) { alert(message); }
 
         function switchTab(tabName, element) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(tabName + '-screen').classList.add('active');
-            
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
-
             if (tabName === 'encounters') loadEncounter();
             if (tabName === 'chats') renderChats();
         }
@@ -360,10 +306,30 @@
             showAlert(`Showing ${type} list`);
         }
 
+        // ============ Supabase Connection ============
+        async function loadFromSupabase() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient.from('profiles').select('*');
+                if (error) { console.error("Supabase error:", error.message); return; }
+                if (data && data.length > 0) {
+                    currentProfiles = data;
+                    renderDiscover(data);
+                    console.log("Loaded from Supabase:", data.length, "profiles");
+                } else {
+                    console.log("Supabase table empty, using mock data");
+                    renderDiscover(mockProfiles);
+                }
+            } catch(e) {
+                console.error("Supabase fetch failed:", e);
+                renderDiscover(mockProfiles);
+            }
+        }
+
+        // ============ Rendering ============
         function renderDiscover(profiles) {
             const suggestedContainer = document.getElementById('suggested-container');
             const everyoneContainer = document.getElementById('everyone-container');
-            
             suggestedContainer.innerHTML = '';
             everyoneContainer.innerHTML = '';
 
@@ -371,10 +337,10 @@
                 const tagsHtml = (profile.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('');
                 suggestedContainer.innerHTML += `
                     <div class="card-large" onclick="showAlert('Viewing profile: ${profile.name}')">
-                        <img src="${profile.image_url}" alt="${profile.name}">
+                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
                         <div class="overlay">
-                            <div class="name">${profile.name}, ${profile.age} <span class="verified-badge"></span></div>
-                            <div class="location">${profile.location}</div>
+                            <div class="name">${profile.name}, ${profile.age || ''} <span class="verified-badge"></span></div>
+                            <div class="location">${profile.location || ''}</div>
                             <div class="tags">${tagsHtml}</div>
                         </div>
                     </div>
@@ -385,9 +351,9 @@
                 const onlineBadge = profile.is_online ? '<span class="status online"></span>' : '';
                 everyoneContainer.innerHTML += `
                     <div class="card-small" onclick="showAlert('Viewing profile: ${profile.name}')">
-                        <img src="${profile.image_url}" alt="${profile.name}">
+                        <img src="${profile.image_url || 'https://via.placeholder.com/300'}" alt="${profile.name}">
                         <div class="info">
-                            <div class="name">${profile.name}, ${profile.age} ${onlineBadge}</div>
+                            <div class="name">${profile.name}, ${profile.age || ''} ${onlineBadge}</div>
                         </div>
                     </div>
                 `;
@@ -395,30 +361,23 @@
         }
 
         function loadEncounter() {
-            if (currentEncounterIndex >= currentProfiles.length) {
-                currentEncounterIndex = 0;
-            }
+            if (currentEncounterIndex >= currentProfiles.length) currentEncounterIndex = 0;
             const profile = currentProfiles[currentEncounterIndex];
             if (!profile) return;
-
             const card = document.getElementById('encounter-card');
-            // ریست کردن کارت
             card.style.transition = 'none';
             card.style.transform = 'translateX(0px) rotate(0deg)';
             card.style.opacity = '1';
             document.getElementById('badge-like').style.opacity = '0';
             document.getElementById('badge-pass').style.opacity = '0';
-
             document.getElementById('encounter-img').src = profile.image_url;
-            document.getElementById('encounter-name').innerHTML = `${profile.name}, ${profile.age} <span class="verified-badge"></span>`;
-            document.getElementById('encounter-location').innerText = profile.location;
+            document.getElementById('encounter-name').innerHTML = `${profile.name}, ${profile.age || ''} <span class="verified-badge"></span>`;
+            document.getElementById('encounter-location').innerText = profile.location || '';
         }
 
-        // ====== منطق سواپ با دکمه ======
         function swipe(action) {
             const card = document.getElementById('encounter-card');
             card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
-            
             if (action === 'like') {
                 card.style.transform = 'translateX(600px) rotate(30deg)';
                 card.style.opacity = '0';
@@ -426,115 +385,73 @@
                 card.style.transform = 'translateX(-600px) rotate(-30deg)';
                 card.style.opacity = '0';
             } else if (action === 'crush') {
-                // انیمیشن کراش: کارت به سمت بالا می‌پره
                 card.style.transform = 'translateY(-600px) scale(0.8)';
                 card.style.opacity = '0';
-                setTimeout(() => { showAlert('💘 You sent a Crush to ' + currentProfiles[currentEncounterIndex].name + '!'); }, 400);
+                const name = currentProfiles[currentEncounterIndex]?.name || 'them';
+                setTimeout(() => { showAlert('💘 You sent a Crush to ' + name + '!'); }, 400);
             }
-
-            setTimeout(() => {
-                currentEncounterIndex++;
-                loadEncounter();
-            }, 400);
+            setTimeout(() => { currentEncounterIndex++; loadEncounter(); }, 400);
         }
 
-        // ====== منطق سواپ با انگشت (Touch Events) ======
+        // ============ Touch/Mouse Swipe ============
         const card = document.getElementById('encounter-card');
         let startX = 0, startY = 0, currentX = 0, currentY = 0, isDragging = false;
-        const SWIPE_THRESHOLD = 100; // حداقل فاصله برای ثبت سواپ
+        const SWIPE_THRESHOLD = 100;
 
         card.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            currentX = startX;
-            currentY = startY;
-            isDragging = true;
+            startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+            currentX = startX; currentY = startY; isDragging = true;
             card.style.transition = 'none';
         }, { passive: true });
 
         card.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            currentX = e.touches[0].clientX;
-            currentY = e.touches[0].clientY;
-            const deltaX = currentX - startX;
-            const deltaY = currentY - startY;
-            const rotation = deltaX / 15; // چرخش ملایم بر اساس فاصله
-
-            // حرکت کارت
-            card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg)`;
-
-            // نمایش برچسب‌ها
-            const badgeLike = document.getElementById('badge-like');
-            const badgePass = document.getElementById('badge-pass');
-            if (deltaX > 30) {
-                badgeLike.style.opacity = Math.min(deltaX / 100, 1);
-                badgePass.style.opacity = 0;
-            } else if (deltaX < -30) {
-                badgePass.style.opacity = Math.min(Math.abs(deltaX) / 100, 1);
-                badgeLike.style.opacity = 0;
-            } else {
-                badgeLike.style.opacity = 0;
-                badgePass.style.opacity = 0;
-            }
+            currentX = e.touches[0].clientX; currentY = e.touches[0].clientY;
+            const deltaX = currentX - startX, deltaY = currentY - startY;
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${deltaX / 15}deg)`;
+            const badgeLike = document.getElementById('badge-like'), badgePass = document.getElementById('badge-pass');
+            if (deltaX > 30) { badgeLike.style.opacity = Math.min(deltaX / 100, 1); badgePass.style.opacity = 0; }
+            else if (deltaX < -30) { badgePass.style.opacity = Math.min(Math.abs(deltaX) / 100, 1); badgeLike.style.opacity = 0; }
+            else { badgeLike.style.opacity = 0; badgePass.style.opacity = 0; }
         }, { passive: true });
 
-        card.addEventListener('touchend', (e) => {
+        card.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
             const deltaX = currentX - startX;
-            
             card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-
-            if (deltaX > SWIPE_THRESHOLD) {
-                // سواپ به راست → لایک
-                swipe('like');
-            } else if (deltaX < -SWIPE_THRESHOLD) {
-                // سواپ به چپ → رد
-                swipe('pass');
-            } else {
-                // برگرداندن به حالت اول
+            if (deltaX > SWIPE_THRESHOLD) swipe('like');
+            else if (deltaX < -SWIPE_THRESHOLD) swipe('pass');
+            else {
                 card.style.transform = 'translate(0px, 0px) rotate(0deg)';
                 document.getElementById('badge-like').style.opacity = '0';
                 document.getElementById('badge-pass').style.opacity = '0';
             }
         });
 
-        // پشتیبانی از ماوس برای تست در مرورگر دسکتاپ
         card.addEventListener('mousedown', (e) => {
-            startX = e.clientX;
-            startY = e.clientY;
-            currentX = startX;
-            currentY = startY;
-            isDragging = true;
-            card.style.transition = 'none';
-            card.style.cursor = 'grabbing';
+            startX = e.clientX; startY = e.clientY; currentX = startX; currentY = startY;
+            isDragging = true; card.style.transition = 'none'; card.style.cursor = 'grabbing';
         });
-
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            currentX = e.clientX;
-            currentY = e.clientY;
-            const deltaX = currentX - startX;
-            const deltaY = currentY - startY;
-            const rotation = deltaX / 15;
-            card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg)`;
+            currentX = e.clientX; currentY = e.clientY;
+            const deltaX = currentX - startX, deltaY = currentY - startY;
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${deltaX / 15}deg)`;
         });
-
         document.addEventListener('mouseup', () => {
             if (!isDragging) return;
-            isDragging = false;
-            card.style.cursor = 'grab';
+            isDragging = false; card.style.cursor = 'grab';
             const deltaX = currentX - startX;
             card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if (deltaX > SWIPE_THRESHOLD) { swipe('like'); }
-            else if (deltaX < -SWIPE_THRESHOLD) { swipe('pass'); }
-            else { card.style.transform = 'translate(0px, 0px) rotate(0deg)'; }
+            if (deltaX > SWIPE_THRESHOLD) swipe('like');
+            else if (deltaX < -SWIPE_THRESHOLD) swipe('pass');
+            else card.style.transform = 'translate(0px, 0px) rotate(0deg)';
         });
 
         function renderLikes() {
             const container = document.getElementById('likes-container');
             container.innerHTML = '';
-            
             currentProfiles.slice(0, 4).forEach(profile => {
                 container.innerHTML += `
                     <div class="card-small" onclick="showAlert('Reveal this like? Upgrade to Epoch Love Extra!')">
@@ -550,7 +467,6 @@
         function renderChats() {
             const container = document.getElementById('chats-container');
             container.innerHTML = '';
-            
             mockChats.forEach(chat => {
                 container.innerHTML += `
                     <div class="msg-item" onclick="showAlert('Opening chat with ${chat.name}...')">
@@ -565,10 +481,10 @@
         }
 
         function initApp() {
-            renderDiscover(mockProfiles);
+            renderDiscover(mockProfiles); // نمایش فوری با داده‌های تستی
             renderLikes();
+            loadFromSupabase(); // سپس تلاش برای دریافت داده‌های واقعی
         }
-
         initApp();
     </script>
 </body>
